@@ -1,0 +1,89 @@
+{
+  "skill": "quip-setup",
+  "version": "0.1.0",
+  "repo": "quip-skill",
+  "audience": "WordPress site owners and developers",
+  "actsOn": "QuipBot setup",
+  "badge": "public alpha",
+  "pitch": "Research, plan, connect, configure, and verify QuipBot without exposing credentials to the agent.",
+  "pitchMark": "without exposing credentials",
+  "problem": [
+    "A useful chatbot needs grounded business knowledge, approved wording, consent, escalation rules, and a testable launch decision.",
+    "Chat-based setup often tempts people to paste WordPress passwords or provider keys into the AI conversation.",
+    "This skill separates human authorization from agent work and stores only non-secret, reviewable setup artifacts."
+  ],
+  "flow": [
+    {
+      "t": "Research",
+      "d": "Read public pages and cite the facts."
+    },
+    {
+      "t": "Questions",
+      "d": "Collect only owner decisions the site cannot answer."
+    },
+    {
+      "t": "Connect",
+      "d": "Keep WordPress credentials outside the transcript."
+    },
+    {
+      "t": "Configure",
+      "d": "Map approved inputs to a no-write plan."
+    },
+    {
+      "t": "Verify",
+      "d": "Expose passes, failures, and blockers before launch."
+    }
+  ],
+  "commands": [
+    "Set up QuipBot on my WordPress site",
+    "Research my site before configuring QuipBot",
+    "Help me plan the QuipBot knowledge base",
+    "Connect this WordPress site to the Quip setup flow",
+    "Review whether QuipBot is ready to go live",
+    "Resume my QuipBot setup"
+  ],
+  "callout": {
+    "label": "Public alpha",
+    "text": "Research, questions, planning, and manual verification work now. **WordPress writes remain blocked** until the stable public API and OS-native helper ship."
+  },
+  "capabilities": {
+    "label": "What works in 0.1.0",
+    "items": [
+      {
+        "name": "Public-site research",
+        "tag": "ready",
+        "ok": true,
+        "desc": "Produces cited facts, unknowns, and confirmation questions."
+      },
+      {
+        "name": "Owner decisions",
+        "tag": "ready",
+        "ok": true,
+        "desc": "Records knowledge, consent, voice, handoff, and launch authority."
+      },
+      {
+        "name": "Configuration plan",
+        "tag": "ready",
+        "ok": true,
+        "desc": "Maps every proposed field to a source and verification method."
+      },
+      {
+        "name": "WordPress writes",
+        "tag": "blocked",
+        "ok": false,
+        "desc": "Waits for the stable public setup API and credential helper."
+      }
+    ]
+  },
+  "limits": {
+    "label": "Safety boundaries",
+    "items": [
+      "No WordPress passwords, Application Passwords, provider keys, or tokens in chat.",
+      "No browser automation, SSH, XML-RPC, direct database writes, or internal admin routes.",
+      "No paid capability without entitlement and no go-live without explicit approval."
+    ]
+  },
+  "covers": "0.1.0",
+  "generated": "2026-08-17",
+  "hasHumanMd": true
+}
