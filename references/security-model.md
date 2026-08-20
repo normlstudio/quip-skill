@@ -11,6 +11,10 @@
 | Quip scoped token | OS credential helper | Scope and expiry only |
 | License key | Quip entitlement flow | Masked status only |
 
+In guided mode, the agent observes none of the authenticated UI. The human may
+report non-secret state such as `provider test passed`, `preset applied`, or
+`visibility off`.
+
 ## Storage
 
 - macOS: Keychain generic password item created by the released helper.
@@ -24,6 +28,9 @@ The skill may open the user's default browser for a documented login or consent
 URL. It must not click, type, read the DOM, capture screenshots, attach to an
 existing session, or extract cookies. The human completes the flow.
 
+During the v0.2.0 guided path, the human opens and operates wp-admin. Do not ask
+them to stream, share, or screenshot the authenticated session.
+
 ## WordPress boundary
 
 - Core Application Password consent, not the normal password.
@@ -31,6 +38,10 @@ existing session, or extract cookies. The human completes the flow.
 - HTTPS only outside loopback development.
 - Exact-origin validation before authorization and every API call.
 - No XML-RPC, SSH, database, filesystem, or generic administrator automation.
+- Plugin packages come only from a verified official distribution. The agent
+  never invents a package URL or uploads an arbitrary ZIP.
+- Production changes require a human-confirmed restorable backup and recorded
+  rollback path. Failed public behavior is disabled before troubleshooting.
 
 ## Logging and artifacts
 

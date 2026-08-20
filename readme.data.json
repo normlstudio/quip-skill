@@ -1,11 +1,11 @@
 {
   "skill": "quip-setup",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "repo": "quip-skill",
   "audience": "WordPress site owners and developers",
   "actsOn": "QuipBot setup",
   "badge": "public alpha",
-  "pitch": "Research, plan, connect, configure, and verify QuipBot without exposing credentials to the agent.",
+  "pitch": "Safely install, research, plan, connect, configure, and verify QuipBot without exposing credentials to the agent.",
   "pitchMark": "without exposing credentials",
   "problem": [
     "A useful chatbot needs grounded business knowledge, approved wording, consent, escalation rules, and a testable launch decision.",
@@ -13,6 +13,10 @@
     "This skill separates human authorization from agent work and stores only non-secret, reviewable setup artifacts."
   ],
   "flow": [
+    {
+      "t": "Preflight",
+      "d": "Confirm authority, official installation, compatibility, and recovery."
+    },
     {
       "t": "Research",
       "d": "Read public pages and cite the facts."
@@ -27,7 +31,7 @@
     },
     {
       "t": "Configure",
-      "d": "Map approved inputs to a no-write plan."
+      "d": "Guide the human through the approved wp-admin plan."
     },
     {
       "t": "Verify",
@@ -42,13 +46,21 @@
     "Review whether QuipBot is ready to go live",
     "Resume my QuipBot setup"
   ],
+  "install": "npx skills add Norml-Studio/quip-skill -g",
+  "installNote": "Requires Node.js 22.20 or newer.",
   "callout": {
     "label": "Public alpha",
-    "text": "Research, questions, planning, and manual verification work now. **WordPress writes remain blocked** until the stable public API and OS-native helper ship."
+    "text": "Human-guided WordPress setup and verification work now. **Direct agent writes remain blocked** until the stable public API and OS-native helper ship."
   },
   "capabilities": {
-    "label": "What works in 0.1.0",
+    "label": "What works in 0.2.0",
     "items": [
+      {
+        "name": "Cold-start preflight",
+        "tag": "ready",
+        "ok": true,
+        "desc": "Checks official installation, versions, environment, backup, rollback, and visibility."
+      },
       {
         "name": "Public-site research",
         "tag": "ready",
@@ -68,7 +80,13 @@
         "desc": "Maps every proposed field to a source and verification method."
       },
       {
-        "name": "WordPress writes",
+        "name": "Guided WordPress setup",
+        "tag": "ready",
+        "ok": true,
+        "desc": "Walks the human through QuipBot admin without observing the authenticated browser."
+      },
+      {
+        "name": "Direct agent writes",
         "tag": "blocked",
         "ok": false,
         "desc": "Waits for the stable public setup API and credential helper."
@@ -80,10 +98,10 @@
     "items": [
       "No WordPress passwords, Application Passwords, provider keys, or tokens in chat.",
       "No browser automation, SSH, XML-RPC, direct database writes, or internal admin routes.",
-      "No paid capability without entitlement and no go-live without explicit approval."
+      "No arbitrary plugin package, no production change without backup, and no go-live without explicit approval."
     ]
   },
-  "covers": "0.1.0",
-  "generated": "2026-08-17",
+  "covers": "0.2.0",
+  "generated": "2026-08-20",
   "hasHumanMd": true
 }

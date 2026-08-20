@@ -2,7 +2,8 @@
 
 ## Stable public setup surface
 
-None is released as of 2026-08-17. Automated WordPress writes are blocked.
+None is released as of 2026-08-20. Direct agent writes are blocked. Version
+0.2.0 uses the human-operated admin path instead.
 
 ## Existing internal surface
 
@@ -12,7 +13,19 @@ built for the bundled WordPress admin application, not promised as a public
 automation contract.
 
 The skill may use the route inventory only to shape the future contract. It must
-not call these routes in v0.1.0.
+not call these routes in v0.2.0.
+
+## Supported path today
+
+The human may use the bundled QuipBot admin application to apply an approved
+plan. The agent stays outside the authenticated browser and records only
+non-secret confirmations. This is a guided workflow, not an API connection.
+
+See `references/admin-guided-path.md` for the exact sequence.
+
+Installation and activation are also human-operated. They follow
+`references/installation-and-rollback.md`; package acquisition is not part of
+the internal admin REST surface.
 
 ## Required public contract before writes
 

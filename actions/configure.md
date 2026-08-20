@@ -1,6 +1,6 @@
 # Action: prepare or apply configuration
 
-## Plan-only mode in 0.1.0
+## Prepare the reviewed plan
 
 Create `quip-setup/configuration-plan.md` from the research and owner answers.
 For every field, record:
@@ -11,6 +11,7 @@ For every field, record:
 - target environment;
 - whether it contains personal or regulated information;
 - verification method.
+- current non-secret value/status and rollback action.
 
 Cover at least:
 
@@ -25,7 +26,25 @@ Cover at least:
 - one site language for the free core;
 - launch-gate status.
 
-## Write contract for a later release
+Use `references/configuration-fields.md`; do not collapse the plan to one broad
+row per screen.
+
+## Guided apply mode in 0.2.0
+
+1. Show the complete non-secret plan and ask for explicit approval.
+2. After approval, read `references/admin-guided-path.md` and give one short
+   wp-admin step at a time.
+3. The human performs every authenticated click, paste, save, and provider test.
+4. Ask only for non-secret results. Never ask for a key, authenticated
+   screenshot, copied headers, cookie, or response body.
+5. Update the plan to `configuration: human-applied` only after the human
+   confirms the relevant save succeeded.
+6. Keep visibility off and hand off to `actions/verify.md`.
+
+If the human cannot access a named screen or label, record the exact mismatch
+and stop that section. Do not improvise with internal routes, SSH, or SQL.
+
+## Direct-write contract for a later release
 
 When a stable public API and helper exist:
 

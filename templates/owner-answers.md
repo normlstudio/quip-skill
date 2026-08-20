@@ -6,6 +6,13 @@
 - Production-write approver:
 - Go-live approver:
 
+## Environment and recovery
+
+- Target environment: `staging | production | unresolved`
+- Backup/reset checkpoint:
+- Rollback owner:
+- Immediate-disable path confirmed: `yes | no`
+
 ## Desired outcome
 
 - Visitor outcome:
@@ -26,6 +33,25 @@
 - Hours/response expectation:
 - Lead fields approved:
 - Lead destination:
+- Return-to-assistant timeout (hours; 0 = off):
+
+## Privacy and operations
+
+- Anonymous transcript retention (days; 0 = indefinite):
+- Remember anonymous conversations in browser: `on | off | unresolved`
+- Daily transcript email: `on | off | unresolved`
+- Daily transcript recipient:
+- Test-conversation reporting exclusion promised: `yes | no | unresolved`
+- Service-error wording:
+- Assistant-offline wording:
+
+## Widget appearance
+
+- Accent color:
+- Logo/header asset:
+- Header text contrast:
+- Position and offsets:
+- Launcher size:
 
 ## Voice and wording
 

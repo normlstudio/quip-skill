@@ -25,3 +25,19 @@ QuipBot configuration.
 - Do not ask the owner to repeat facts already supported by a public source.
 - If the site blocks automated reading, list the pages the owner should supply;
   do not bypass the control.
+
+## Owner-supplied fallback
+
+If public research is unavailable, accept only content the owner deliberately
+provides as a local file, pasted excerpt, or public URL. For every supplied
+source, record:
+
+- `provenance: owner-supplied`;
+- source title or filename;
+- date supplied;
+- whether the source is public, private, or unknown;
+- the exact facts derived from it.
+
+Never label owner-supplied content as independently public-verified. If the
+owner cannot supply the needed source, keep the fact `unresolved` and block any
+configuration row that depends on it.

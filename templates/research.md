@@ -26,6 +26,15 @@
 |---|---|---|
 | | | |
 
+## Owner-supplied sources
+
+| Title or filename | Date supplied | Public/private/unknown | Facts used |
+|---|---|---|---|
+| | | | |
+
+Facts in this table are `provenance: owner-supplied`, not independently
+public-verified.
+
 ## Policies and boundaries
 
 - Consent/privacy facts:
