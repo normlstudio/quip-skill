@@ -1,4 +1,4 @@
-# QuipBot owner answers
+# Quip Bot owner answers
 
 ## Setup authority
 

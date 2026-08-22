@@ -1,7 +1,7 @@
-# QuipBot 3.10.0 field map
+# Quip Bot 3.11.0 field map
 
 Use this map to build a field-level plan. It reflects the human-facing admin UI
-verified for QuipBot 3.10.0. If labels or constraints differ, stop that section
+verified for Quip Bot 3.11.0. If labels or constraints differ, stop that section
 with `compatibility: blocked-guide-drift`; do not guess internal option names.
 
 ## Settings → AI providers

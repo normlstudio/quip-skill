@@ -1,4 +1,4 @@
-# QuipBot setup preflight
+# Quip Bot setup preflight
 
 ## Authority and workspace
 
@@ -12,11 +12,11 @@
 
 - Installation: `active | inactive | absent | blocked-official-package | unresolved`
 - Distribution source: `official-directory | official-product-site | owner-delivery | unknown`
-- QuipBot version:
+- Quip Bot version:
 - WordPress version:
 - PHP version:
 - Compatibility: `passed | unresolved | blocked-plugin-upgrade | blocked-runtime | blocked-guide-drift`
-- QuipBot Setup page opens: `yes | no | unknown`
+- Quip Bot Setup page opens: `yes | no | unknown`
 
 ## Change safety
 

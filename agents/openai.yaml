@@ -1,4 +1,4 @@
 interface:
-  display_name: "Quip Setup"
-  short_description: "Safely configure and verify QuipBot on WordPress"
-  default_prompt: "Use $quip-setup to safely set up QuipBot on my WordPress site."
+  display_name: "Quip Bot Setup"
+  short_description: "Safely configure and verify Quip Bot on WordPress"
+  default_prompt: "Use $quip-setup to safely set up Quip Bot on my WordPress site."

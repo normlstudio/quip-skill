@@ -1,11 +1,11 @@
 {
   "skill": "quip-setup",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "repo": "quip-skill",
   "audience": "WordPress site owners and developers",
-  "actsOn": "QuipBot setup",
+  "actsOn": "Quip Bot setup",
   "badge": "public alpha",
-  "pitch": "Safely install, research, plan, connect, configure, and verify QuipBot without exposing credentials to the agent.",
+  "pitch": "Safely install, research, plan, connect, configure, and verify Quip Bot without exposing credentials to the agent.",
   "pitchMark": "without exposing credentials",
   "problem": [
     "A useful chatbot needs grounded business knowledge, approved wording, consent, escalation rules, and a testable launch decision.",
@@ -39,12 +39,12 @@
     }
   ],
   "commands": [
-    "Set up QuipBot on my WordPress site",
-    "Research my site before configuring QuipBot",
-    "Help me plan the QuipBot knowledge base",
-    "Connect this WordPress site to the Quip setup flow",
-    "Review whether QuipBot is ready to go live",
-    "Resume my QuipBot setup"
+    "Set up Quip Bot on my WordPress site",
+    "Research my site before configuring Quip Bot",
+    "Help me plan the Quip Bot knowledge base",
+    "Connect this WordPress site to the Quip Bot setup flow",
+    "Review whether Quip Bot is ready to go live",
+    "Resume my Quip Bot setup"
   ],
   "install": "npx skills add Norml-Studio/quip-skill -g",
   "installNote": "Requires Node.js 22.20 or newer.",
@@ -53,7 +53,7 @@
     "text": "Human-guided WordPress setup and verification work now. **Direct agent writes remain blocked** until the stable public API and OS-native helper ship."
   },
   "capabilities": {
-    "label": "What works in 0.2.0",
+    "label": "What works in 0.2.1",
     "items": [
       {
         "name": "Cold-start preflight",
@@ -83,7 +83,7 @@
         "name": "Guided WordPress setup",
         "tag": "ready",
         "ok": true,
-        "desc": "Walks the human through QuipBot admin without observing the authenticated browser."
+        "desc": "Walks the human through Quip Bot admin without observing the authenticated browser."
       },
       {
         "name": "Direct agent writes",
@@ -101,7 +101,7 @@
       "No arbitrary plugin package, no production change without backup, and no go-live without explicit approval."
     ]
   },
-  "covers": "0.2.0",
-  "generated": "2026-08-20",
+  "covers": "0.2.1",
+  "generated": "2026-08-22",
   "hasHumanMd": true
 }

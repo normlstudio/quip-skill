@@ -1,4 +1,4 @@
-# Guided QuipBot admin path
+# Guided Quip Bot admin path
 
 Use this path while the public setup API and credential helper are unavailable.
 The human remains in control of the authenticated WordPress browser. The agent
@@ -9,17 +9,17 @@ prepares the plan, explains each step, and records non-secret confirmations.
 1. Complete `preflight.md`: canonical origin, authority, installation/version,
    environment, backup/reset path, rollback, and visibility off.
 2. Record the current non-secret baseline from
-   `references/installation-and-rollback.md`.
+   `contracts/installation-and-rollback.md`.
 3. Complete `research.md`, `owner-answers.md`, and the field-level rows in
    `configuration-plan.md`.
-4. Keep QuipBot in preview mode until verification passes.
+4. Keep Quip Bot in preview mode until verification passes.
 5. Ask for explicit approval of the plan before the human changes WordPress.
 
 ## Human-operated sequence
 
 ### 1. Connect the AI provider
 
-Open **QuipBot → Settings → AI providers**.
+Open **Quip Bot → Settings → AI providers**.
 
 - Choose Anthropic, OpenAI, Gemini, or OpenRouter.
 - Choose a listed model or enter a provider-supported custom model ID.
@@ -28,12 +28,12 @@ Open **QuipBot → Settings → AI providers**.
 - Record only provider, model, and whether the test passed. Never ask for the
   key, its prefix/suffix, an authenticated screenshot, or a copied response.
 
-The site owner pays the provider directly. QuipBot core is free forever. A
-future Quip Pro license does not include provider inference.
+The site owner pays the provider directly. Quip Bot core is free forever. A
+future Quip Bot Pro license does not include provider inference.
 
 ### 2. Give the assistant starting knowledge
 
-Open **QuipBot → Setup**.
+Open **Quip Bot → Setup**.
 
 - For a no-cost starting point, apply the closest industry preset and review
   every generated topic afterward.
@@ -44,17 +44,17 @@ Open **QuipBot → Setup**.
 
 ### 3. Review knowledge and behavior
 
-Open **QuipBot → Knowledge base**.
+Open **Quip Bot → Knowledge base**.
 
 - Compare business facts and Q&A entries with `research.md` and owner answers.
 - Keep hard rules and prohibited claims explicit.
 - Remove unsupported facts and add missing escalation boundaries.
 
-Open **QuipBot → Templates** and review visitor-facing prompts and fallbacks.
+Open **Quip Bot → Templates** and review visitor-facing prompts and fallbacks.
 
 ### 4. Review operations and privacy
 
-Open **QuipBot → Settings** and review these sections:
+Open **Quip Bot → Settings** and review these sections:
 
 - **Legal texts** — consent and short disclosure.
 - **Contacts** — lead destination and contact routes.
@@ -63,7 +63,7 @@ Open **QuipBot → Settings** and review these sections:
 - **Human takeover** — return-to-assistant behavior.
 - **Widget appearance** and **Languages** — approved identity and language scope.
 
-Use `references/configuration-fields.md` to record every field separately,
+Use `contracts/configuration-fields.md` to record every field separately,
 including its environment, data classification, verification, and rollback.
 
 Do not enable paid-only behavior without a valid entitlement. Do not promise a
@@ -78,7 +78,7 @@ plugin's preview link to run the verification checklist.
 After every readiness-blocking check except L04 passes, ask separately:
 
 > The reviewed setup passes the guided verification. Do you approve making
-> QuipBot live for visitors on this site now?
+> Quip Bot live for visitors on this site now?
 
 Record the explicit yes as L04 passed. Only then should the human enable
 visibility and save. Verify one public conversation without putting visitor

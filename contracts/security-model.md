@@ -6,10 +6,10 @@
 |---|---|---|
 | WordPress account password | WordPress login page | No |
 | WordPress Application Password | Local callback helper | Status only |
-| AI-provider key | Write-only QuipBot settings UI | `has_key` and test status |
-| Quip account credential | Quip login/consent page | Authorization status only |
-| Quip scoped token | OS credential helper | Scope and expiry only |
-| License key | Quip entitlement flow | Masked status only |
+| AI-provider key | Write-only Quip Bot settings UI | `has_key` and test status |
+| quip.bot account credential | quip.bot login/consent page | Authorization status only |
+| quip.bot scoped token | OS credential helper | Scope and expiry only |
+| License key | Quip Bot entitlement flow | Masked status only |
 
 In guided mode, the agent observes none of the authenticated UI. The human may
 report non-secret state such as `provider test passed`, `preset applied`, or
@@ -28,13 +28,13 @@ The skill may open the user's default browser for a documented login or consent
 URL. It must not click, type, read the DOM, capture screenshots, attach to an
 existing session, or extract cookies. The human completes the flow.
 
-During the v0.2.0 guided path, the human opens and operates wp-admin. Do not ask
+During the v0.2.1 guided path, the human opens and operates wp-admin. Do not ask
 them to stream, share, or screenshot the authenticated session.
 
 ## WordPress boundary
 
 - Core Application Password consent, not the normal password.
-- Least WordPress capability compatible with the published Quip setup API.
+- Least WordPress capability compatible with the published Quip Bot setup API.
 - HTTPS only outside loopback development.
 - Exact-origin validation before authorization and every API call.
 - No XML-RPC, SSH, database, filesystem, or generic administrator automation.

@@ -1,30 +1,30 @@
-# Current QuipBot API contract
+# Current Quip Bot API contract
 
 ## Stable public setup surface
 
 None is released as of 2026-08-20. Direct agent writes are blocked. Version
-0.2.0 uses the human-operated admin path instead.
+0.2.1 uses the human-operated admin path instead.
 
 ## Existing internal surface
 
-QuipBot currently has authenticated internal admin routes under `iqb/v1/admin`
+Quip Bot currently has authenticated internal admin routes under `iqb/v1/admin`
 for settings, providers, presets, analysis, conversations, and leads. They were
 built for the bundled WordPress admin application, not promised as a public
 automation contract.
 
 The skill may use the route inventory only to shape the future contract. It must
-not call these routes in v0.2.0.
+not call these routes in v0.2.1.
 
 ## Supported path today
 
-The human may use the bundled QuipBot admin application to apply an approved
+The human may use the bundled Quip Bot admin application to apply an approved
 plan. The agent stays outside the authenticated browser and records only
 non-secret confirmations. This is a guided workflow, not an API connection.
 
-See `references/admin-guided-path.md` for the exact sequence.
+See `contracts/admin-guided-path.md` for the exact sequence.
 
 Installation and activation are also human-operated. They follow
-`references/installation-and-rollback.md`; package acquisition is not part of
+`contracts/installation-and-rollback.md`; package acquisition is not part of
 the internal admin REST surface.
 
 ## Required public contract before writes

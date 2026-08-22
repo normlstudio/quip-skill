@@ -1,6 +1,6 @@
 # quip-setup
 
-> Safely install, research, plan, connect, configure, and verify QuipBot on
+> Safely install, research, plan, connect, configure, and verify Quip Bot on
 > WordPress without exposing site passwords or AI-provider keys to the agent.
 
 ## The problem
@@ -30,7 +30,7 @@ The installer supports Codex, Claude Code, Cursor, and other agents in the open
 skills ecosystem. Then start a new agent turn with:
 
 ```text
-Use quip-setup to set up QuipBot on https://example.com
+Use quip-setup to set up Quip Bot on https://example.com
 ```
 
 Use only the public site URL. Never place a WordPress password, provider key,
@@ -40,12 +40,12 @@ Application Password, or secret URL in the command or conversation.
 
 | When you want to… | Say something like… |
 |---|---|
-| Start a complete setup | *"Set up QuipBot on my WordPress site."* |
-| Research before configuring | *"Research my site before configuring QuipBot."* |
-| Plan the bot's knowledge | *"Help me plan the QuipBot knowledge base."* |
-| Prepare the safe connection | *"Connect this WordPress site to the Quip setup flow."* |
-| Review launch readiness | *"Review whether QuipBot is ready to go live."* |
-| Continue existing work | *"Resume my QuipBot setup."* |
+| Start a complete setup | *"Set up Quip Bot on my WordPress site."* |
+| Research before configuring | *"Research my site before configuring Quip Bot."* |
+| Plan the bot's knowledge | *"Help me plan the Quip Bot knowledge base."* |
+| Prepare the safe connection | *"Connect this WordPress site to the Quip Bot setup flow."* |
+| Review launch readiness | *"Review whether Quip Bot is ready to go live."* |
+| Continue existing work | *"Resume my Quip Bot setup."* |
 
 ## A typical run
 
@@ -56,14 +56,14 @@ Application Password, or secret URL in the command or conversation.
 3. It asks only for owner decisions the site cannot answer and records them in
    `quip-setup/owner-answers.md`.
 4. It creates a field-by-field plan in `quip-setup/configuration-plan.md`.
-5. After approval, it guides the human through QuipBot's WordPress admin while
+5. After approval, it guides the human through Quip Bot's WordPress admin while
    staying outside the authenticated browser.
 6. It records passed, failed, and blocked checks in `verification.md`, then asks
    separately before the human enables the public widget.
 
-> **Public alpha:** version 0.2.0 completes the human-guided setup and
+> **Public alpha:** version 0.2.1 completes the human-guided setup and
 > verification path available today. Direct agent writes remain blocked until
-> QuipBot publishes its stable setup API and OS-native credential helper.
+> Quip Bot publishes its stable setup API and OS-native credential helper.
 
 ---
 
@@ -83,7 +83,7 @@ The workflow has six visible stages:
    handoff, lead, appearance, language, and launch settings.
 6. **Verify** — checks authority, data, behavior, privacy, and launch gates.
 
-Version 0.2.0 runs all six stages through a human-operated wp-admin path. It
+Version 0.2.1 runs all six stages through a human-operated wp-admin path. It
 never pretends that a blocked direct connection or API exists.
 
 ### Inputs
@@ -129,7 +129,7 @@ quip-setup/
 - `verification.md` exposes each pass, failure, and blocker.
 
 None of these files may contain a password, Application Password, provider key,
-Quip token, license key, payment key, reset link, cookie, or secret-bearing URL.
+quip.bot token, license key, payment key, reset link, cookie, or secret-bearing URL.
 
 ### Research behavior
 
@@ -148,20 +148,20 @@ misrepresents it as independently public-verified.
 
 ### Installation and recovery
 
-The cold-start preflight works whether QuipBot is already active or absent. The
+The cold-start preflight works whether Quip Bot is already active or absent. The
 human reports the plugin, WordPress, and PHP versions from wp-admin. This guide
-is verified against QuipBot 3.10.0 and uses WordPress 6.2 and PHP 7.4 as runtime
+is verified against Quip Bot 3.11.0 and uses WordPress 6.2 and PHP 7.4 as runtime
 floors.
 
 If the plugin is absent, the human installs only from a verified official
-WordPress directory result, official QuipBot product download, or the owner's
-existing QuipBot/Norml delivery channel. The skill never invents a package URL
+WordPress directory result, official Quip Bot product download, or the owner's
+existing Quip Bot/Norml delivery channel. The skill never invents a package URL
 or substitutes an unofficial mirror. No verified package means the honest
 result is `installation: blocked-official-package`.
 
 Staging is preferred when available. Production changes require a
 human-confirmed restorable backup. The recorded immediate-disable path is to
-turn visibility off; if wp-admin's QuipBot UI is unavailable, the human may
+turn visibility off; if wp-admin's Quip Bot UI is unavailable, the human may
 deactivate the plugin. Failed public behavior is disabled before troubleshooting.
 
 ### Owner-question behavior
@@ -184,7 +184,7 @@ answer.
 
 The available connection is `guided-manual`: the human uses their existing
 authenticated wp-admin session while the agent stays outside the browser. The
-human enters the provider key in QuipBot's write-only field and reports only
+human enters the provider key in Quip Bot's write-only field and reports only
 non-secret state such as the chosen provider/model and whether the test passed.
 
 The future direct connection uses WordPress core's Application Password consent
@@ -194,7 +194,7 @@ and stores it directly in macOS Keychain or Windows Credential Manager.
 The agent never controls the browser, reads the authenticated page, collects the
 normal WordPress password, or receives the generated Application Password.
 
-Because the helper and public API are not included in version 0.2.0, the skill
+Because the helper and public API are not included in version 0.2.1, the skill
 records:
 
 ```yaml
@@ -207,13 +207,13 @@ access, or a credential pasted into chat.
 
 ### Configuration model
 
-The current QuipBot plugin has internal admin routes, but they are not a stable
-public automation contract. Version 0.2.0 does not call them.
+The current Quip Bot plugin has internal admin routes, but they are not a stable
+public automation contract. Version 0.2.1 does not call them.
 
 After the plan is approved, the skill guides the human through **Settings → AI
 providers**, **Setup**, **Knowledge base**, **Templates**, and the operational
 Settings sections. The human keeps visibility off until verification passes.
-The QuipBot 3.10.0 field map requires a separate plan row for every control,
+The Quip Bot 3.11.0 field map requires a separate plan row for every control,
 including current state, source, approval, environment, data classification,
 verification, and rollback.
 
@@ -232,14 +232,14 @@ After that API and the helper ship, a write-capable release must:
 6. test behavior;
 7. request separate go-live approval.
 
-### Provider keys and Quip accounts
+### Provider keys and quip.bot accounts
 
-The human enters the provider key in QuipBot's write-only WordPress settings.
+The human enters the provider key in Quip Bot's write-only WordPress settings.
 Automation may later inspect provider, model, `has_key`, and test status, but
 never the key.
 
-The free QuipBot core does not require a Quip account or paid license. A future
-Quip device-authorization flow belongs only to a premium entitlement or managed
+The free Quip Bot core does not require a quip.bot account or paid license. A future
+Quip Bot device-authorization flow belongs only to a premium entitlement or managed
 service that genuinely needs an account.
 
 ### Language and paid-feature boundary
@@ -270,12 +270,12 @@ go-live.
 
 - `SKILL.md` — executable workflow and guardrails.
 - `actions/` — one file for each stage.
-- `references/security-model.md` — trust and credential boundaries.
-- `references/admin-guided-path.md` — current human-operated wp-admin sequence.
-- `references/installation-and-rollback.md` — official package, version,
+- `contracts/security-model.md` — trust and credential boundaries.
+- `contracts/admin-guided-path.md` — current human-operated wp-admin sequence.
+- `contracts/installation-and-rollback.md` — official package, version,
   environment, backup, and recovery contract.
-- `references/configuration-fields.md` — field-level QuipBot 3.10.0 map.
-- `references/current-api-contract.md` — public API gate.
+- `contracts/configuration-fields.md` — field-level Quip Bot 3.11.0 map.
+- `contracts/current-api-contract.md` — public API gate.
 - `templates/` — the setup artifact formats.
 - `qa/verification-checklist.md` — plan and runtime release gate.
 
@@ -283,7 +283,7 @@ go-live.
 
 - **Site redirects to an unexpected host:** stop and ask the user to confirm the
   canonical site; never authorize the redirect target automatically.
-- **QuipBot is absent:** install only from a verified official distribution; if
+- **Quip Bot is absent:** install only from a verified official distribution; if
   none is available, record `blocked-official-package`.
 - **Version/runtime is below the documented floor:** stop before configuration
   and record the exact compatibility blocker.
@@ -303,4 +303,4 @@ go-live.
 
 ---
 
-_Covers SKILL.md v0.2.0 | Last changelog entry: v0.2.0 | Generated: 2026-08-20._
+_Covers SKILL.md v0.2.1 | Last changelog entry: v0.2.1 | Generated: 2026-08-22._

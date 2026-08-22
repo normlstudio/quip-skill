@@ -21,7 +21,7 @@ Verification has two pre-launch gates:
 `fail` or `blocked` keeps visibility off. Conditional items become blocking
 when the corresponding feature or promise is enabled.
 
-## Guided runtime verification in 0.2.0
+## Guided runtime verification in 0.2.1
 
 - The human confirms the selected provider/model and a successful **Test
   connection** result without exposing the key.
@@ -37,7 +37,7 @@ when the corresponding feature or promise is enabled.
 
 If the post-launch session fails, instruct the human to turn visibility off
 first, confirm the widget is absent anonymously, and follow
-`references/installation-and-rollback.md`. Do not troubleshoot while the failed
+`contracts/installation-and-rollback.md`. Do not troubleshoot while the failed
 configuration remains public.
 
 Mark anything that cannot be observed or confirmed `blocked`; never upgrade a

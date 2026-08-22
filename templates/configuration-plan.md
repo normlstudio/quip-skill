@@ -1,4 +1,4 @@
-# QuipBot configuration plan
+# Quip Bot configuration plan
 
 ## Status
 
@@ -28,7 +28,7 @@
 ## Field-level proposed configuration
 
 Add one row for every applicable field in
-`references/configuration-fields.md`. Do not combine multiple controls into one
+`contracts/configuration-fields.md`. Do not combine multiple controls into one
 row.
 
 | Screen / field | Current non-secret state | Proposed value/action | Source | Approval | Environment | Personal/regulated data | Verification | Rollback |
@@ -45,13 +45,13 @@ row.
 
 ## Provider-key action
 
-The human enters the key directly in the write-only QuipBot settings UI. The
+The human enters the key directly in the write-only Quip Bot settings UI. The
 agent may later confirm only provider, model, `has_key`, and test status.
 
 ## Guided apply sequence
 
 1. Approve this non-secret plan.
-2. Human connects and tests the provider in QuipBot Settings.
+2. Human connects and tests the provider in Quip Bot Settings.
 3. Human applies a reviewed preset or site-analysis draft.
 4. Human reviews Knowledge base, Templates, legal text, contacts, notifications,
    retention, appearance, and language.
@@ -76,5 +76,5 @@ agent may later confirm only provider, model, `has_key`, and test status.
 - Installation/compatibility:
 - Backup/reset or rollback:
 - Direct automation: public OS-native connection helper.
-- Direct automation: stable public Quip setup API.
+- Direct automation: stable public Quip Bot setup API.
 -

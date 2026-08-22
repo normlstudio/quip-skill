@@ -1,4 +1,4 @@
-# QuipBot setup research
+# Quip Bot setup research
 
 ## Site
 

@@ -3,7 +3,7 @@
 ## Goal
 
 Understand the public business context before asking questions or proposing a
-QuipBot configuration.
+Quip Bot configuration.
 
 ## Procedure
 

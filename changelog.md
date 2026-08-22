@@ -1,16 +1,27 @@
 # Changelog
 
+## 0.2.1 — 2026-08-22
+
+- Standardized the public product name as **Quip Bot** throughout the skill,
+  generated setup artifacts, agent metadata, and human documentation.
+- Revalidated the installation and field-level guidance against the official
+  Quip Bot 3.11.0 release and raised the documented compatibility floor.
+- Preserved the `quip-setup` skill slug, `quip-skill` repository, `iqb` API
+  namespace, and `quip.bot` domain as compatibility-sensitive identifiers.
+- Migrated the legacy generic `references/` drawer to the descriptive
+  `contracts/` folder and updated every workflow and human-doc cross-link.
+
 ## 0.2.0 — 2026-08-20
 
 - Added the working human-guided wp-admin path so the skill can complete setup
   before the public automation API and credential helper ship.
 - Added verified installation instructions using the open `npx skills` CLI.
-- Mapped the current QuipBot admin sequence across provider testing, Setup,
+- Mapped the current Quip Bot admin sequence across provider testing, Setup,
   Knowledge base, Templates, privacy, preview, and separate go-live approval.
 - Kept authenticated browser control and secret handling human-owned while
   distinguishing guided setup from blocked direct automation.
-- Reconciled the free-forever core, direct provider billing, and separate Quip
-  Pro license boundary from the Aug 19 product meeting.
+- Reconciled the free-forever core, direct provider billing, and separate
+  Quip Bot Pro license boundary from the Aug 19 product meeting.
 - Closed the independent cold-start forward-test gaps: explicit opening gate,
   official-package installation path, version/runtime checks, staging vs.
   production decision, backup and rollback, a field-level 3.10.0 map, classified
@@ -22,11 +33,11 @@
 ## 0.1.0 — 2026-08-17
 
 - Added the five-stage Research → Questions → Connect → Configure → Verify
-  workflow from the Quip product discussion.
+  workflow from the Quip Bot product discussion.
 - Added public-site research, owner-answer, configuration-plan, and verification
   artifacts.
 - Locked the security model: browser consent is human-operated, provider keys
   remain write-only in WordPress, and credentials never enter the AI transcript.
-- Marked WordPress writes honestly blocked until the stable public Quip setup API
+- Marked WordPress writes honestly blocked until the stable public Quip Bot setup API
   and OS-native connection helper are released.
-- Kept the free QuipBot setup independent from a Quip account or paid license.
+- Kept the free Quip Bot setup independent from a quip.bot account or paid license.

@@ -6,7 +6,7 @@ Create `quip-setup/configuration-plan.md` from the research and owner answers.
 For every field, record:
 
 - proposed value or action;
-- source: public URL, owner answer, or Quip default;
+- source: public URL, owner answer, or Quip Bot default;
 - approval state;
 - target environment;
 - whether it contains personal or regulated information;
@@ -26,13 +26,13 @@ Cover at least:
 - one site language for the free core;
 - launch-gate status.
 
-Use `references/configuration-fields.md`; do not collapse the plan to one broad
+Use `contracts/configuration-fields.md`; do not collapse the plan to one broad
 row per screen.
 
-## Guided apply mode in 0.2.0
+## Guided apply mode in 0.2.1
 
 1. Show the complete non-secret plan and ask for explicit approval.
-2. After approval, read `references/admin-guided-path.md` and give one short
+2. After approval, read `contracts/admin-guided-path.md` and give one short
    wp-admin step at a time.
 3. The human performs every authenticated click, paste, save, and provider test.
 4. Ask only for non-secret results. Never ask for a key, authenticated

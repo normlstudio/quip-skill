@@ -1,4 +1,4 @@
-# Action: preflight and install QuipBot
+# Action: preflight and install Quip Bot
 
 Complete this gate before public research or any WordPress configuration.
 
@@ -22,33 +22,33 @@ project directory is clearly the requested workspace; state the chosen path.
 Ask the human to open **WordPress → Plugins → Installed Plugins** and report
 only:
 
-- whether **QuipBot** is installed;
+- whether **Quip Bot** is installed;
 - whether it is active;
 - its displayed version;
 - the WordPress and PHP versions from **Tools → Site Health → Info**.
 
-Version 0.2.0 of this skill is verified against QuipBot 3.10.0. The documented
+Version 0.2.1 of this skill is verified against Quip Bot 3.11.0. The documented
 runtime floor is WordPress 6.2 and PHP 7.4.
 
-- QuipBot older than 3.10.0: `compatibility: blocked-plugin-upgrade`.
+- Quip Bot older than 3.11.0: `compatibility: blocked-plugin-upgrade`.
 - WordPress older than 6.2 or PHP older than 7.4:
   `compatibility: blocked-runtime`.
-- A newer QuipBot whose labels materially differ from the field map: stop the
+- A newer Quip Bot whose labels materially differ from the field map: stop the
   affected section and record `compatibility: blocked-guide-drift`.
 
 Never request an authenticated screenshot.
 
 ## Human installation path
 
-If QuipBot is absent, follow `references/installation-and-rollback.md`. The
+If Quip Bot is absent, follow `contracts/installation-and-rollback.md`. The
 human installs and activates the plugin from a verified official distribution.
 The agent does not upload the ZIP, operate wp-admin, or invent a download URL.
 
-If QuipBot is installed but inactive, the human activates the already-verified
+If Quip Bot is installed but inactive, the human activates the already-verified
 installation from **Installed Plugins**. Record `installation: inactive` until
 activation succeeds; do not continue to research/configuration while inactive.
 
-After activation, the human confirms that the **QuipBot** menu and **Setup** page
+After activation, the human confirms that the **Quip Bot** menu and **Setup** page
 open. Record status, not authenticated page contents.
 
 ## Change-safety checkpoint
@@ -59,7 +59,7 @@ open. Record status, not authenticated page contents.
   credential.
 - Record the immediate-disable action: turn
   **Settings → Visibility → Make the bot live for visitors** off. If the admin
-  UI itself is unavailable, the human may deactivate QuipBot from Installed
+  UI itself is unavailable, the human may deactivate Quip Bot from Installed
   Plugins.
 
 Write `quip-setup/preflight.md` from `templates/preflight.md`, using these
@@ -71,7 +71,7 @@ artifact_folder: /absolute/non-secret/path/quip-setup
 environment: staging | production | unresolved
 canonical_origin: https://example.com
 installation: active | inactive | absent | blocked-official-package | unresolved
-plugin_version: 3.10.0 | unknown
+plugin_version: 3.11.0 | unknown
 wordpress_version: value | unknown
 php_version: value | unknown
 compatibility: passed | unresolved | blocked-plugin-upgrade | blocked-runtime | blocked-guide-drift
