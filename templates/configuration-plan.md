@@ -3,19 +3,23 @@
 ## Status
 
 - Environment:
-- Installation: `active | inactive | absent | blocked-official-package | unresolved`
+- Installation:
 - Plugin version:
-- Compatibility: `passed | blocked-plugin-upgrade | blocked-runtime | blocked-guide-drift`
-- Backup/reset checkpoint: `confirmed | unresolved | blocked`
+- Compatibility: `assisted | guided | blocked`
+- Backup/reset checkpoint:
 - Rollback owner/action:
-- Connection: `guided-manual`
-- Automation: `blocked-public-helper-and-api`
-- Public API: `blocked-stable-contract`
-- Provider test: `pending`
-- Configuration: `planned`
+- Connection: `assisted | guided-manual`
+- WordPress authorization: `connected | not-required-guided | revoked`
+- Plan: `free-core | pro`
+- Pro activation: `not-required | connected | blocked | disconnected`
+- Provider test: `pending | passed | failed`
+- Configuration: `planned | validated | approved | applied | verified | rolled-back`
+- Configuration SHA-256:
+- Apply ID:
+- Rollback ID:
 - Proposed by:
 - Approved by:
-- Go-live: `off`
+- Go-live: `off | approved | live`
 
 ## Current non-secret baseline
 
@@ -23,58 +27,38 @@
 - Active provider/model:
 - Provider key saved: `yes | no | unknown` (never record the key)
 - Enabled site language:
-- Populated configuration areas:
+- Knowledge field count:
+- Knowledge area count:
+- Question count:
+- Last applied configuration:
 
 ## Field-level proposed configuration
 
 Add one row for every applicable field in
-`contracts/configuration-fields.md`. Do not combine multiple controls into one
-row.
+`contracts/configuration-fields.md`. Do not combine controls.
 
-| Screen / field | Current non-secret state | Proposed value/action | Source | Approval | Environment | Personal/regulated data | Verification | Rollback |
+| Field | Current non-secret state | Proposed value/action | Source | Approval | Environment | Data classification | Verification | Rollback |
 |---|---|---|---|---|---|---|---|---|
-| AI providers / Active provider | | | Owner answer | Pending | | No | Human confirmation | Restore prior selection |
-| AI providers / Model | | | Owner answer | Pending | | No | Provider test | Restore prior model |
-| AI providers / Provider key | Saved/not saved only | Human enters directly | Owner action | Pending | | Secret — never record | Test passed status | Human restores/clears key |
-| Knowledge base / Business facts | | | Research + owner | Pending | | Review | Supported-question tests | Restore baseline/backup |
-| Knowledge base / FAQ bank | | | Research + owner | Pending | | Review | Supported-question tests | Restore baseline/backup |
-| Knowledge base / Hard rules | | | Owner answer + safety floor | Pending | | No | Refusal tests | Restore baseline/backup |
-| Settings / Consent notice | | | Owner/legal answer | Pending | | Legal decision | Consent gate test | Restore baseline |
-| Settings / Short disclaimer | | | Owner/legal answer | Pending | | Legal decision | Answer disclosure test | Restore baseline |
-| Settings / Visibility | Off | Keep off until approval | Launch gate | Pending | | No | Anonymous public check | Turn off immediately |
+| Provider / ID | | | Owner answer | Pending | | No | Read-back | Snapshot |
+| Provider / model | | | Owner answer | Pending | | No | Provider test | Snapshot |
+| Provider / key | Saved/not saved only | Human enters in secure local form | Owner action | Pending | | Secret — never record | Configured + test status | Human clear/restore |
+| Knowledge / business facts | | | Research + owner | Pending | | Review | Supported-question tests | Snapshot |
+| Knowledge / Q&A bank | | | Research + owner | Pending | | Review | Supported-question tests | Snapshot |
+| Settings / consent | | | Owner/legal answer | Pending | | Legal decision | Consent gate | Snapshot |
+| Settings / disclaimer | | | Owner/legal answer | Pending | | Legal decision | Answer disclosure | Snapshot |
+| Visibility | Off | Keep off until separate approval | Launch gate | Pending | | No | Anonymous check | Turn off |
 
-## Provider-key action
+## Validation and approval
 
-The human enters the key directly in the write-only Quip Bot settings UI. The
-agent may later confirm only provider, model, `has_key`, and test status.
-
-## Guided apply sequence
-
-1. Approve this non-secret plan.
-2. Human connects and tests the provider in Quip Bot Settings.
-3. Human applies a reviewed preset or site-analysis draft.
-4. Human reviews Knowledge base, Templates, legal text, contacts, notifications,
-   retention, appearance, and language.
-5. Human keeps visibility off and runs the preview verification.
-6. Receive separate go-live approval.
-7. Human enables visibility and verifies one public session.
-
-## Future automated write sequence
-
-1. Connect through the released helper.
-2. Read current setup state.
-3. Show a redacted field-level diff.
-4. Receive explicit production-write approval.
-5. Write disabled/draft configuration.
-6. Read back and verify.
-7. Run test chat and handoff checks.
-8. Receive separate go-live approval.
-9. Enable the public widget and verify one public session.
+- Validation status:
+- Sections:
+- Warnings:
+- Errors:
+- Configuration SHA-256:
+- Exact proposal shown to owner:
+- Apply approval statement and timestamp:
+- Go-live approval statement and timestamp:
 
 ## Blockers
 
-- Installation/compatibility:
-- Backup/reset or rollback:
-- Direct automation: public OS-native connection helper.
-- Direct automation: stable public Quip Bot setup API.
 -

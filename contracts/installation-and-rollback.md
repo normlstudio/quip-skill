@@ -1,6 +1,6 @@
 # Installation, environment, and rollback
 
-This is the cold-start safety contract for the human-guided release.
+This is the cold-start safety contract for assisted and guided setup.
 
 ## Verified distribution only
 
@@ -36,7 +36,7 @@ to improvise.
 5. Human reports the installed version and whether **Quip Bot → Setup** opens.
 6. Human confirms public visibility is off.
 
-The v0.2.1 guide is verified against Quip Bot 3.11.0, WordPress 6.2+, and PHP
+The v0.3.0 guide is verified against Quip Bot 3.12.0, WordPress 6.2+, and PHP
 7.4+. Treat these as compatibility floors, not a claim that every unrelated
 plugin/theme combination is compatible.
 
@@ -67,8 +67,8 @@ output:
 1. Human turns **Settings → Visibility → Make the bot live for visitors** off
    and saves.
 2. Confirm the widget is absent for an anonymous visitor.
-3. Restore the recorded pre-change non-secret values or restore the confirmed
-   backup/reset checkpoint.
+3. For assisted setup, run the returned rollback ID. For guided setup, restore
+   the recorded pre-change values or confirmed backup/reset checkpoint.
 4. If Quip Bot admin cannot be used, the human deactivates Quip Bot from Installed
    Plugins, then confirms the widget is absent.
 5. Record the failed check and rollback evidence. Do not retry go-live without

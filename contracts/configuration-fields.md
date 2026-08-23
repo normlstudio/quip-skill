@@ -1,16 +1,16 @@
-# Quip Bot 3.11.0 field map
+# Quip Bot 3.12.0 field map
 
 Use this map to build a field-level plan. It reflects the human-facing admin UI
-verified for Quip Bot 3.11.0. If labels or constraints differ, stop that section
+verified for Quip Bot 3.12.0. If labels or constraints differ, stop that section
 with `compatibility: blocked-guide-drift`; do not guess internal option names.
 
 ## Settings → AI providers
 
 | Field | Allowed decision | Secret or sensitive | Verification |
 |---|---|---|---|
-| Active provider | Anthropic, OpenAI, Gemini, or OpenRouter | No | Human confirms selection |
+| Active provider | Anthropic, OpenAI, Gemini, or OpenRouter | No | Read-back matches approved selection |
 | Model | Listed model or supported custom model ID | No | Provider test passes |
-| Provider key | Human-entered value only | Secret | Record only key saved + test passed |
+| Provider key | Human enters in local secure form or wp-admin | Secret | Record only key saved + test passed |
 
 ## Knowledge base and Templates
 

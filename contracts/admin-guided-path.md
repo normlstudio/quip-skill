@@ -1,6 +1,6 @@
 # Guided Quip Bot admin path
 
-Use this path while the public setup API and credential helper are unavailable.
+Use this fallback when the public setup API or native credential helper is unavailable.
 The human remains in control of the authenticated WordPress browser. The agent
 prepares the plan, explains each step, and records non-secret confirmations.
 
@@ -90,7 +90,8 @@ Record these in `configuration-plan.md`:
 
 ```yaml
 connection: guided-manual
-automation: blocked-public-helper-and-api
+automation: unavailable
+reason: exact non-secret incompatibility
 provider_test: pending | passed | failed
 configuration: planned | human-applied | verified
 go_live: off | approved | live

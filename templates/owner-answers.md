@@ -65,9 +65,10 @@
 
 - Provider:
 - Model:
-- Provider key entered in WordPress: `not-checked`
+- Provider key entry: `secure-local-form | guided-wp-admin | not-checked`
 - Free-core site language:
-- Multi-language premium decision: `not-requested`
+- Plan: `free-core | pro | unresolved`
+- Multi-language Pro decision: `not-requested`
 
 ## Unresolved decisions
 

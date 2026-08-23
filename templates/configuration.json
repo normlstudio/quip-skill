@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "configuration": {
+    "settings": {
+      "consent": "Owner-approved consent notice",
+      "disclaimer": "Owner-approved short disclosure",
+      "takeover_hours": 0,
+      "anon_retention": 30,
+      "anon_remember": false,
+      "languages": ["en"],
+      "default_language": "en",
+      "message_error": "Owner-approved service error message",
+      "message_offline": "Owner-approved offline message",
+      "digest_enabled": false,
+      "digest_email": "",
+      "lead_email": "owner@example.com",
+      "phone": "",
+      "phone_alt": ""
+    },
+    "knowledge": {
+      "fields": {
+        "business": "Approved business facts"
+      },
+      "areas": [
+        {
+          "key": "area_1",
+          "label": "Services",
+          "topic_name": "Services",
+          "topic_sub": "",
+          "icon": "chat",
+          "chip": true
+        }
+      ],
+      "bank": {
+        "area_1": [
+          {
+            "question": "Approved visitor question",
+            "answer": "Grounded answer"
+          }
+        ]
+      }
+    },
+    "appearance": {
+      "accent": "#14161A",
+      "header_bg": "",
+      "header_image": "",
+      "header_text": "light",
+      "logo": "",
+      "position": "right",
+      "offset_side": 20,
+      "offset_bottom": 20,
+      "launcher_size": 48
+    }
+  }
+}
