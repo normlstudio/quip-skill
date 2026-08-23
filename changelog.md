@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.3.0 — 2026-08-23
+
+- Shipped the macOS/Windows secure setup helper with WordPress core browser
+  approval, loopback callbacks, Keychain/Credential Manager storage, exact
+  origin checks, bounded responses, and redacted output.
+- Added the Quip Bot setup API 1.0 workflow for status, closed-schema validation,
+  approved SHA-256 apply, idempotency, verification, snapshot rollback,
+  write-only provider entry, and separately approved go-live.
+- Added quip.bot browser authorization with PKCE S256, short-lived single-use
+  codes and grants, site-bound encrypted activation tokens, and no raw license
+  key in the assisted flow.
+- Enforced one production plus three non-production Pro connections, individual
+  disconnects, and a new installation identity when a database clone changes URL.
+- Added `connection.md` and `configuration.json` artifacts, runnable helper
+  commands, an expanded release checklist, and guided fallback for incompatible
+  plugins, Linux, or unavailable native credential storage.
+- Made WordPress disconnect delete the local native credential even when the
+  site is offline, and invalidated readiness whenever provider credentials,
+  provider choice, or model choice changes.
+- Verified the full isolated local journey: browser consent, namespace scope,
+  OS storage, configuration approval/apply/verify/rollback, Pro activation,
+  validation, disconnect, remote WordPress revocation, cleanup, and adversarial
+  rejection of PKCE, redirect, expiry, replay, scope, and cross-site failures.
+
 ## 0.2.1 — 2026-08-22
 
 - Standardized the public product name as **Quip Bot** throughout the skill,

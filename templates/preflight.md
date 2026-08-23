@@ -6,7 +6,8 @@
 - Named owner/approver:
 - Artifact folder:
 - Canonical origin:
-- Environment: `staging | production | unresolved`
+- Environment: `local | development | staging | production | unresolved`
+- Plan: `free-core | pro | unresolved`
 
 ## Installation and compatibility
 
@@ -15,7 +16,10 @@
 - Quip Bot version:
 - WordPress version:
 - PHP version:
-- Compatibility: `passed | unresolved | blocked-plugin-upgrade | blocked-runtime | blocked-guide-drift`
+- Setup API/schema:
+- Operating system:
+- Credential store self-test: `passed | guided-only | failed | not-run`
+- Compatibility: `assisted | guided | unresolved | blocked-runtime | blocked-guide-drift`
 - Quip Bot Setup page opens: `yes | no | unknown`
 
 ## Change safety

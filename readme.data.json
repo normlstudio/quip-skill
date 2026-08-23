@@ -1,107 +1,108 @@
 {
   "skill": "quip-setup",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "repo": "quip-skill",
   "audience": "WordPress site owners and developers",
   "actsOn": "Quip Bot setup",
-  "badge": "public alpha",
-  "pitch": "Safely install, research, plan, connect, configure, and verify Quip Bot without exposing credentials to the agent.",
-  "pitchMark": "without exposing credentials",
+  "badge": "macOS + Windows",
+  "pitch": "Research, connect, configure, verify, and launch Quip Bot without putting credentials into the AI conversation.",
+  "pitchMark": "without putting credentials into the AI conversation",
   "problem": [
-    "A useful chatbot needs grounded business knowledge, approved wording, consent, escalation rules, and a testable launch decision.",
-    "Chat-based setup often tempts people to paste WordPress passwords or provider keys into the AI conversation.",
-    "This skill separates human authorization from agent work and stores only non-secret, reviewable setup artifacts."
+    "A useful WordPress assistant needs grounded knowledge, approved wording, consent, escalation rules, and a testable launch decision.",
+    "Chat-based setup tempts people to paste WordPress passwords, provider keys, or license keys into the transcript.",
+    "This skill keeps human authorization in the browser, secrets in native credential stores, and only reviewed non-secret artifacts in the project."
   ],
   "flow": [
     {
       "t": "Preflight",
-      "d": "Confirm authority, official installation, compatibility, and recovery."
+      "d": "Confirm authority, compatibility, recovery, and off visibility."
     },
     {
       "t": "Research",
-      "d": "Read public pages and cite the facts."
-    },
-    {
-      "t": "Questions",
-      "d": "Collect only owner decisions the site cannot answer."
+      "d": "Read public pages and collect only unresolved owner decisions."
     },
     {
       "t": "Connect",
-      "d": "Keep WordPress credentials outside the transcript."
+      "d": "Use human browser consent and the operating-system credential store."
     },
     {
-      "t": "Configure",
-      "d": "Guide the human through the approved wp-admin plan."
+      "t": "Validate",
+      "d": "Compile the closed configuration and show its exact SHA-256."
+    },
+    {
+      "t": "Apply",
+      "d": "Write idempotently after approval, with snapshot and rollback."
     },
     {
       "t": "Verify",
-      "d": "Expose passes, failures, and blockers before launch."
+      "d": "Pass readiness, request separate go-live approval, then revoke access."
     }
   ],
   "commands": [
     "Set up Quip Bot on my WordPress site",
     "Research my site before configuring Quip Bot",
-    "Help me plan the Quip Bot knowledge base",
-    "Connect this WordPress site to the Quip Bot setup flow",
+    "Connect my WordPress site securely",
+    "Connect this site to my Quip Bot Pro account",
+    "Apply this approved Quip Bot configuration",
     "Review whether Quip Bot is ready to go live",
     "Resume my Quip Bot setup"
   ],
   "install": "npx skills add Norml-Studio/quip-skill -g",
   "installNote": "Requires Node.js 22.20 or newer.",
   "callout": {
-    "label": "Public alpha",
-    "text": "Human-guided WordPress setup and verification work now. **Direct agent writes remain blocked** until the stable public API and OS-native helper ship."
+    "label": "Free core and Pro",
+    "text": "**Quip Bot core is free forever** and needs no quip.bot account. Pro is a separate $200/year entitlement; provider usage is billed separately."
   },
   "capabilities": {
-    "label": "What works in 0.2.1",
+    "label": "What works in 0.3.0",
     "items": [
       {
-        "name": "Cold-start preflight",
+        "name": "Browser consent",
         "tag": "ready",
         "ok": true,
-        "desc": "Checks official installation, versions, environment, backup, rollback, and visibility."
+        "desc": "WordPress and optional Pro login stay human-operated in the system browser."
       },
       {
-        "name": "Public-site research",
+        "name": "Native credential storage",
         "tag": "ready",
         "ok": true,
-        "desc": "Produces cited facts, unknowns, and confirmation questions."
+        "desc": "Uses macOS Keychain or Windows Credential Manager and prints redacted JSON."
       },
       {
-        "name": "Owner decisions",
+        "name": "Approved configuration",
         "tag": "ready",
         "ok": true,
-        "desc": "Records knowledge, consent, voice, handoff, and launch authority."
+        "desc": "Validates a closed schema, fingerprints it, applies idempotently, and snapshots rollback."
       },
       {
-        "name": "Configuration plan",
+        "name": "Write-only provider entry",
         "tag": "ready",
         "ok": true,
-        "desc": "Maps every proposed field to a source and verification method."
+        "desc": "The human enters the provider key in a loopback-only local form."
       },
       {
-        "name": "Guided WordPress setup",
+        "name": "Site-bound Pro",
         "tag": "ready",
         "ok": true,
-        "desc": "Walks the human through Quip Bot admin without observing the authenticated browser."
+        "desc": "Uses PKCE and a one-time grant; each connected website gets its own activation."
       },
       {
-        "name": "Direct agent writes",
-        "tag": "blocked",
+        "name": "Linux automation",
+        "tag": "guided",
         "ok": false,
-        "desc": "Waits for the stable public setup API and credential helper."
+        "desc": "Uses the human-operated wp-admin fallback until a native credential backend is approved."
       }
     ]
   },
   "limits": {
     "label": "Safety boundaries",
     "items": [
-      "No WordPress passwords, Application Passwords, provider keys, or tokens in chat.",
-      "No browser automation, SSH, XML-RPC, direct database writes, or internal admin routes.",
-      "No arbitrary plugin package, no production change without backup, and no go-live without explicit approval."
+      "No password, Application Password, provider key, license key, or token in chat or artifacts.",
+      "No browser automation, SSH, XML-RPC, SQL, or internal Quip Bot admin routes.",
+      "No production write without recovery; no initial apply and go-live in one approval."
     ]
   },
-  "covers": "0.2.1",
-  "generated": "2026-08-22",
+  "covers": "0.3.0",
+  "generated": "2026-08-23",
   "hasHumanMd": true
 }

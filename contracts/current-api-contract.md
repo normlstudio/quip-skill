@@ -1,47 +1,119 @@
-# Current Quip Bot API contract
+# Quip Bot setup API 1.0 contract
 
-## Stable public setup surface
+## Compatibility
 
-None is released as of 2026-08-20. Direct agent writes are blocked. Version
-0.2.1 uses the human-operated admin path instead.
+Secure assisted setup requires Quip Bot 3.12.0 or newer.
 
-## Existing internal surface
+Public, non-secret discovery:
 
-Quip Bot currently has authenticated internal admin routes under `iqb/v1/admin`
-for settings, providers, presets, analysis, conversations, and leads. They were
-built for the bundled WordPress admin application, not promised as a public
-automation contract.
+```text
+GET /wp-json/iqb/v1/setup/compatibility
+```
 
-The skill may use the route inventory only to shape the future contract. It must
-not call these routes in v0.2.1.
+It returns API/schema versions, plugin/version, canonical site URL, exact REST
+and WordPress authorization URLs, fixed application identity, and capabilities.
+It does not return an installation ID, credential, or configured business data.
 
-## Supported path today
+Every other WordPress setup route requires an administrator-approved WordPress
+Application Password and is limited to `/wp-json/iqb/v1/setup/*`.
 
-The human may use the bundled Quip Bot admin application to apply an approved
-plan. The agent stays outside the authenticated browser and records only
-non-secret confirmations. This is a guided workflow, not an API connection.
+## Helper commands
 
-See `contracts/admin-guided-path.md` for the exact sequence.
+Resolve `scripts/quip-setup.mjs` relative to `SKILL.md`.
 
-Installation and activation are also human-operated. They follow
-`contracts/installation-and-rollback.md`; package acquisition is not part of
-the internal admin REST surface.
+```bash
+node scripts/quip-setup.mjs preflight --site URL
+node scripts/quip-setup.mjs self-test-keychain
+node scripts/quip-setup.mjs connect-wordpress --site URL
+node scripts/quip-setup.mjs connect-account --site URL
+node scripts/quip-setup.mjs status --site URL
+node scripts/quip-setup.mjs validate --site URL --file configuration.json
+node scripts/quip-setup.mjs apply --site URL --file configuration.json \
+  --approved-sha SHA256 --operation-id ID
+node scripts/quip-setup.mjs provider --site URL --provider ID --model ID
+node scripts/quip-setup.mjs provider-test --site URL
+node scripts/quip-setup.mjs verify --site URL
+node scripts/quip-setup.mjs rollback --site URL --rollback-id ID
+node scripts/quip-setup.mjs go-live --site URL --apply-id ID \
+  --configuration-sha SHA256 --operation-id ID --confirm-go-live
+node scripts/quip-setup.mjs disconnect-license --site URL
+node scripts/quip-setup.mjs revoke-wordpress --site URL
+```
 
-## Required public contract before writes
+The helper accepts no secret command-line option and prints redacted JSON only.
 
-The plugin owner must publish:
+## Authenticated WordPress routes
 
-- explicit version and compatibility negotiation;
-- least-privilege setup capability;
-- read-only status endpoint;
-- draft settings and knowledge endpoints;
-- consent, handoff, appearance, and launch-gate fields;
-- write-only provider-key status and test operation;
-- preview/test-chat operation excluded from customer reporting;
-- validation errors with stable machine-readable codes;
-- idempotency and rollback behavior;
-- redacted audit events;
-- activation and go-live as separate explicit operations.
+| Method | Route | Purpose |
+|---|---|---|
+| GET | `/status` | Redacted current state and installation identity |
+| POST | `/validate` | Closed-schema validation; no writes |
+| POST | `/apply` | Approved, fingerprinted, idempotent apply + snapshot |
+| POST | `/verify` | Readiness checks; never changes visibility |
+| POST | `/rollback` | Restore the single current snapshot |
+| PUT | `/provider` | Write-only provider key and model selection |
+| POST | `/provider/test` | Store and return non-secret test status |
+| POST | `/go-live` | Separate verified visibility operation |
+| POST | `/license/activate` | Exchange one activation grant server to server |
+| POST | `/license/validate` | Validate the encrypted site activation |
+| DELETE | `/license` | Disconnect that Pro activation |
+| DELETE | `/connection` | Self-revoke the current Application Password |
 
-The published schema becomes the source of truth. The skill must fail closed on
-unknown fields or versions.
+All responses use `Cache-Control: no-store, private`. Requests and responses are
+size-limited. Unknown routes, fields, schema versions, and protected-header
+overrides fail closed.
+
+## Configuration envelope
+
+```json
+{
+  "schema_version": "1.0",
+  "configuration": {
+    "provider": {},
+    "settings": {},
+    "knowledge": {},
+    "templates": {},
+    "appearance": {}
+  }
+}
+```
+
+Every object is closed. Omit an unchanged section. See
+`templates/configuration.json` for the supported shape and
+`contracts/configuration-fields.md` for meaning and constraints.
+
+Validation returns `configuration_sha256`. Apply requires:
+
+```json
+{
+  "approval": {
+    "confirmed": true,
+    "artifact_sha256": "the validated SHA-256"
+  }
+}
+```
+
+The helper adds approval only after independently revalidating the unchanged
+file. Apply also requires `X-Quip-Setup-Idempotency-Key`.
+
+## Pro browser authorization
+
+The helper opens the fixed quip.bot account authorization endpoint with:
+
+- client ID `quip-setup`;
+- exact loopback redirect URI;
+- PKCE S256 challenge;
+- opaque state;
+- exact site URL, authenticated installation ID, and plugin version;
+- scopes `entitlement:read activation:issue`.
+
+The authorization code lasts two minutes and is single-use. The access token
+lasts fifteen minutes but is revoked when it issues one five-minute activation
+grant. The grant is bound to site URL, installation ID, environment, and plugin
+version. The WordPress plugin exchanges it and never returns the resulting
+activation token through the setup API.
+
+## Internal routes remain forbidden
+
+The plugin's `iqb/v1/admin` routes serve the bundled admin application. They are
+not part of this contract and the skill must never call them.

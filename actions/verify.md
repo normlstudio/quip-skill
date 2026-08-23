@@ -1,57 +1,59 @@
-# Action: verify setup
+# Action: verify setup and control go-live
 
-## Plan verification
+## Readiness gate
 
-1. Ensure every required configuration section has a value, an explicit
-   decision, or a visible blocker.
-2. Confirm every business fact is sourced.
-3. Confirm provider choice is recorded without a key.
-4. Confirm consent, handoff, and prohibited-claim decisions are explicit.
-5. Confirm the free-core language scope is represented accurately.
-6. Confirm automated writes remain blocked rather than simulated.
-7. Write `quip-setup/verification.md` from the QA checklist.
+1. Run the helper's `verify` command for assisted setup, or collect the guided
+   non-secret confirmations.
+2. Confirm the applied SHA and sections match the approved artifacts.
+3. Confirm provider/model and provider-test status without exposing the key.
+4. Confirm sourced business knowledge, consent, handoff, privacy, language,
+   appearance, and prohibited claims.
+5. Complete `qa/verification-checklist.md` with fictional inputs only.
+6. Write `quip-setup/verification.md` with `pass`, `fail`, `blocked`, or
+   `not-applicable`, plus evidence, tester, and timestamp.
 
-Verification has two pre-launch gates:
+Every readiness-blocking row except L04 must pass before asking for go-live.
+`fail` or `blocked` keeps visibility off. Conditional rows become blocking when
+the related feature or promise is enabled.
 
-1. **Readiness gate:** every blocking row except L04 must be `pass` or a
-   justified `not-applicable` before requesting go-live approval.
-2. **Authorization gate:** request the decision separately. L04 must become
-   `pass` before the human enables visibility.
+## Behavior checks
 
-`fail` or `blocked` keeps visibility off. Conditional items become blocking
-when the corresponding feature or promise is enabled.
+- Two supported questions map to approved sources.
+- An unknown business question gets an honest fallback.
+- A prohibited/high-risk claim is refused or escalated.
+- An unrelated request is declined without answering it.
+- Consent appears before the first external message when enabled.
+- Disclosure, handoff, lead route, error/offline wording, and notifications
+  match the approved decisions.
+- Mobile and desktop previews do not clip or overlap.
 
-## Guided runtime verification in 0.2.1
+Never use real visitor personal information in a test.
 
-- The human confirms the selected provider/model and a successful **Test
-  connection** result without exposing the key.
-- The human confirms the reviewed preset or site-analysis draft was applied.
-- The human opens the plugin preview link while public visibility remains off.
-- Run the supported-question, refusal, consent, fallback, and handoff checks in
-  `qa/verification-checklist.md`. Record evidence without visitor personal data.
-- Test mobile and desktop rendering through human observation or a public,
-  non-authenticated preview that the owner explicitly supplied.
-- Ask for separate go-live approval only after the readiness gate passes; record
-  L04 as passed before the human enables visibility.
-- After approval and human activation, verify one real public session.
+## Rollback on failure
 
-If the post-launch session fails, instruct the human to turn visibility off
-first, confirm the widget is absent anonymously, and follow
-`contracts/installation-and-rollback.md`. Do not troubleshoot while the failed
-configuration remains public.
+If an assisted apply is wrong, run `rollback` before editing the next proposal.
+If public behavior is already wrong, turn visibility off first, confirm the
+widget is absent anonymously, then roll back or restore the recorded backup.
 
-Mark anything that cannot be observed or confirmed `blocked`; never upgrade a
-human instruction into a passed check.
+Do not troubleshoot a failed configuration while it remains public.
 
-## Direct runtime verification after the public API ships
+## Separate authorization gate
 
-- Connection identity and capabilities are correct.
-- Provider status reports a tested key without returning the key.
-- Knowledge and settings match the approved artifacts.
-- Test chat answers supported questions and refuses unsupported claims.
-- Consent appears before visitor content is sent to the provider.
-- Human handoff and lead routing reach the intended destination.
-- Error and offline states are understandable.
-- Public widget remains off until the user explicitly approves go-live.
-- After go-live, verify one real public session without recording secrets or
-  visitor personal data.
+After readiness passes, ask:
+
+> The reviewed configuration passes the readiness gate. Do you approve making
+> Quip Bot live for visitors on `{site}` now?
+
+Record the approver, exact decision, and timestamp as L04. Only an explicit yes
+authorizes the helper's `go-live` command with the approved apply ID,
+configuration SHA, a new operation ID, and `--confirm-go-live`.
+
+The API re-runs blocking verification and refuses go-live if it is not ready.
+After success, verify one anonymous public session. A failure triggers immediate
+visibility-off and rollback.
+
+## Credential cleanup
+
+After completion or abandonment, run `revoke-wordpress`. Confirm connection
+status is revoked without printing credential material. Do not disconnect the
+Pro activation unless the owner explicitly asks.
