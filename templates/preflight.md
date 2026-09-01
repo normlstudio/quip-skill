@@ -16,6 +16,7 @@
 - WordPress version:
 - PHP version:
 - Compatibility: `passed | unresolved | blocked-plugin-upgrade | blocked-runtime | blocked-guide-drift`
+- Connection path: `api | guided-manual | unresolved` (guided reason: `multisite | plugin-predates-api | owner-declined-helper | credential-backend-unsupported`)
 - Quip Bot Setup page opens: `yes | no | unknown`
 
 ## Change safety

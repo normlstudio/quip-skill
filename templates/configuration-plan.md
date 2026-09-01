@@ -8,9 +8,9 @@
 - Compatibility: `passed | blocked-plugin-upgrade | blocked-runtime | blocked-guide-drift`
 - Backup/reset checkpoint: `confirmed | unresolved | blocked`
 - Rollback owner/action:
-- Connection: `guided-manual`
-- Automation: `blocked-public-helper-and-api`
-- Public API: `blocked-stable-contract`
+- Connection: `api | guided-manual`
+- Connection reason (guided only): `multisite | plugin-predates-api | owner-declined-helper | credential-backend-unsupported`
+- API apply record (API path): apply_id / rollback_id / configuration_sha256 / idempotency key
 - Provider test: `pending`
 - Configuration: `planned`
 - Proposed by:
@@ -59,22 +59,27 @@ agent may later confirm only provider, model, `has_key`, and test status.
 6. Receive separate go-live approval.
 7. Human enables visibility and verifies one public session.
 
-## Future automated write sequence
+## Automated write sequence (API path)
 
-1. Connect through the released helper.
-2. Read current setup state.
-3. Show a redacted field-level diff.
-4. Receive explicit production-write approval.
-5. Write disabled/draft configuration.
-6. Read back and verify.
-7. Run test chat and handoff checks.
+1. Connect through the shipped helper (`connect`); note the two-hour hard
+   lifetime and 30-minute idle timeout.
+2. Read current setup state (`GET /setup/status`).
+3. Build the envelope from this approved plan and `POST /setup/validate`.
+4. Show the validate summary and warnings; receive explicit production-write
+   approval.
+5. `POST /setup/apply` with `approval.confirmed: true` and the server's
+   `configuration_sha256`; record apply_id / rollback_id / idempotency key.
+   Visibility stays unchanged.
+6. Human enters the provider key through the helper `provider` subcommand;
+   `POST /setup/provider/test`.
+7. `POST /setup/verify` plus the checklist's human-observed behavior tests.
 8. Receive separate go-live approval.
-9. Enable the public widget and verify one public session.
+9. `POST /setup/go-live` (revokes the connection) and verify one public
+   session.
 
 ## Blockers
 
 - Installation/compatibility:
 - Backup/reset or rollback:
-- Direct automation: public OS-native connection helper.
-- Direct automation: stable public Quip Bot setup API.
+- API path unavailable (guided reason, if any):
 -

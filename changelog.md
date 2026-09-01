@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.3.0 — 2026-09-01
+
+- Made the shipped Quip Bot setup API (`quipbot/v1/setup`, API version 1.0)
+  the default connect/configure/verify path, gated on the public
+  `GET /setup/compatibility` payload (`available`, schema `"1.0"`, the base
+  capability set) rather than a plugin version string; the guided wp-admin
+  path remains as the documented fallback with an explicit recorded `reason`.
+- Shipped the OS-native credential helper `helper/quip-setup-helper.mjs`:
+  a single-file, zero-dependency Node.js (>= 22.20) ESM script with
+  `connect`, `status`, `call`, `provider`, and `disconnect` subcommands;
+  macOS Keychain storage, loopback Application Password consent, a closed
+  `call` bridge locked to `/setup` paths (with `PUT /setup/provider` refused),
+  file-only request bodies, auto-generated idempotency keys for apply and
+  go-live, and a TTY echo-off prompt for the provider key. Windows and Linux
+  exit `credential-backend-unsupported` and route to the guided path.
+- Rewrote `contracts/current-api-contract.md` as the shipped-surface record:
+  endpoint table (nine setup routes, four interview mirrors, public
+  compatibility), the capability list, feature tiers (base API since 4.3.0,
+  interview since 4.8.0), stable error codes, the connection lifetime policy
+  (30-minute idle, two-hour hard maximum, revocation on go-live, site-wide
+  revocation), the multisite refusal, and the fail-closed rules; removed the
+  obsolete `iqb/v1` internal-surface description.
+- Added the envelope flow to configure (validate → owner approval → apply
+  with the server-returned `configuration_sha256`, optional rollback that
+  never restores a provider secret) and the capability-gated interview stage
+  (GET questions → owner answers in chat → PUT answers → GET preview → fold
+  `preview.envelope` into the configuration envelope).
+- Made `POST /setup/verify` drive the automated verification rows and go-live
+  a separate `POST /setup/go-live` that revokes the connection
+  (`connection_revoked`), with the API-path evidence map added to the QA
+  checklist.
+- Added the envelope mapping (verified against Quip Bot 4.8.0) beside the
+  3.11.0 wp-admin label map, marked the macOS Keychain storage row shipped,
+  and replaced the `automation: blocked-public-helper-and-api` state with
+  `connection: api | guided-manual` plus a guided-only `reason`.
+
 ## 0.2.1 — 2026-08-22
 
 - Standardized the public product name as **Quip Bot** throughout the skill,

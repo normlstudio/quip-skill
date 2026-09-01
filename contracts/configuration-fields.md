@@ -1,8 +1,13 @@
-# Quip Bot 3.11.0 field map
+# Quip Bot field map
 
-Use this map to build a field-level plan. It reflects the human-facing admin UI
-verified for Quip Bot 3.11.0. If labels or constraints differ, stop that section
-with `compatibility: blocked-guide-drift`; do not guess internal option names.
+Use this map to build a field-level plan. Two tiers:
+
+- **wp-admin labels (guided path)** — the tables below reflect the
+  human-facing admin UI verified for Quip Bot 3.11.0. If labels or constraints
+  differ, stop that section with `compatibility: blocked-guide-drift`; do not
+  guess internal option names.
+- **Envelope mapping (API path)** — the last section maps each field/group to
+  its configuration-envelope section and key, verified against Quip Bot 4.8.0.
 
 ## Settings → AI providers
 
@@ -81,6 +86,51 @@ explicit `not-applicable-existing-key-no-safe-fault-injection` evidence.
 | Side/bottom offsets | 0–80 px | No | No clipping/overlap |
 | Launcher size | 44, 48, or 56 px | No | Touch target check |
 | Make bot live | Off during setup; separate approval required | Release gate | Anonymous public check |
+
+## Envelope mapping (API path, verified against Quip Bot 4.8.0)
+
+The configuration envelope sent to `POST /setup/validate` and
+`POST /setup/apply` is `{"schema_version": "1.0", "configuration": {…}}` with
+these sections. The schema is closed — an unknown key fails the whole request
+with `quipbot_setup_unknown_field`; never invent a key this table does not
+name.
+
+| Field / group (wp-admin) | Envelope section | Key(s) |
+|---|---|---|
+| Active provider | `provider` | `id` (e.g. `openai`) |
+| Model | `provider` | `model` |
+| Provider key | — not in the envelope | Helper `provider` subcommand → `PUT /setup/provider` only |
+| Consent notice | `settings` | `consent` |
+| Short disclaimer | `settings` | `disclaimer` |
+| Return to assistant after | `settings` | `takeover_hours` (0–720) |
+| Keep anonymous transcripts for | `settings` | `anon_retention` (0–3650) |
+| Remember in browser | `settings` | `anon_remember` (bool) |
+| Allowed languages | `settings` | `languages` (e.g. `["en"]`) |
+| Default language | `settings` | `default_language` |
+| Service error message | `settings` | `message_error` |
+| Assistant offline message | `settings` | `message_offline` |
+| Daily transcript email | `settings` | `digest_enabled` (bool), `digest_email` |
+| Lead notification email | `settings` | `lead_email` |
+| Contact phone / second phone | `settings` | `phone`, `phone_alt` |
+| Business facts / knowledge prose | `knowledge` | `fields` — keys `intro`, `business`, `facts`, `faq`, `boundaries`, `privacy`, `extra_rules`, `hard_rules` |
+| Service/topic areas | `knowledge` | `areas` — list of `{key, label, topic_name, topic_sub, icon, chip}`; keys `area_1`–`area_9` |
+| FAQ / question bank | `knowledge` | `bank` — `{"area_N": [{"question", "answer"}]}`; keys must refer to an included or already configured area |
+| Conversation templates (welcome) | `templates` | `greet` |
+| Accent color | `appearance` | `accent` |
+| Header background / text tone | `appearance` | `header_bg`, `header_text` |
+| Header image / logo | `appearance` | `header_image`, `logo` |
+| Position | `appearance` | `position` (`left`/`right`) |
+| Side/bottom offsets | `appearance` | `offset_side`, `offset_bottom` (0–80) |
+| Launcher size | `appearance` | `launcher_size` (44/48/56) |
+| Make bot live | — not in the envelope | `POST /setup/go-live` only, after verification and approval |
+
+Sections may be omitted for a partial setup. Values reuse the same domain
+validation as the admin UI (provider IDs/models, language codes, icon IDs,
+appearance values, emails, numbers, URLs) — a constraint from the guided
+tables above applies unchanged to the matching envelope key. When the
+`interview` capability is used, `GET /setup/interview/preview` returns a ready
+`knowledge` envelope; prefer folding it in over hand-building the knowledge
+section.
 
 ## Every plan row
 

@@ -56,14 +56,17 @@ Application Password, or secret URL in the command or conversation.
 3. It asks only for owner decisions the site cannot answer and records them in
    `quip-setup/owner-answers.md`.
 4. It creates a field-by-field plan in `quip-setup/configuration-plan.md`.
-5. After approval, it guides the human through Quip Bot's WordPress admin while
-   staying outside the authenticated browser.
+5. After approval, it validates and applies the configuration through the
+   published Quip Bot setup API — or guides the human through wp-admin on the
+   fallback path — while staying outside the authenticated browser.
 6. It records passed, failed, and blocked checks in `verification.md`, then asks
-   separately before the human enables the public widget.
+   separately before the public widget goes live.
 
-> **Public alpha:** version 0.2.1 completes the human-guided setup and
-> verification path available today. Direct agent writes remain blocked until
-> Quip Bot publishes its stable setup API and OS-native credential helper.
+> **Public alpha:** version 0.3.0 ships both paths. The API path is the
+> default — Quip Bot's stable setup API plus the bundled macOS credential
+> helper — and the human-guided wp-admin path remains the documented fallback
+> for multisite, older plugins, or platforms without a supported credential
+> backend.
 
 ---
 
@@ -77,14 +80,18 @@ The workflow has six visible stages:
    environment, backup/reset, rollback, and visibility.
 2. **Research** — reads public site pages and cites every business fact.
 3. **Owner questions** — collects operating decisions, boundaries, and wording.
-4. **Connect** — defines WordPress Application Password consent through the
-   system browser and an OS-native credential helper.
+4. **Connect** — runs WordPress core's Application Password consent through
+   the system browser; the bundled helper stores the credential in the macOS
+   Keychain, outside the transcript.
 5. **Configure** — maps approved inputs to provider, knowledge, consent,
    handoff, lead, appearance, language, and launch settings.
 6. **Verify** — checks authority, data, behavior, privacy, and launch gates.
 
-Version 0.2.1 runs all six stages through a human-operated wp-admin path. It
-never pretends that a blocked direct connection or API exists.
+Version 0.3.0 runs all six stages through the shipped setup API by default
+and through the human-operated wp-admin path as the fallback. It never
+pretends that an unavailable connection or capability exists: the path is
+chosen by the public compatibility gate, and every gap is recorded with its
+reason.
 
 ### Inputs
 
@@ -150,8 +157,9 @@ misrepresents it as independently public-verified.
 
 The cold-start preflight works whether Quip Bot is already active or absent. The
 human reports the plugin, WordPress, and PHP versions from wp-admin. This guide
-is verified against Quip Bot 3.11.0 and uses WordPress 6.2 and PHP 7.4 as runtime
-floors.
+verifies the guided screen guidance against Quip Bot 3.11.0 and the API
+contract against 4.8.0 (base setup API since 4.3.0), with WordPress 6.2 and
+PHP 7.4 as runtime floors.
 
 If the plugin is absent, the human installs only from a verified official
 WordPress directory result, official Quip Bot product download, or the owner's
@@ -182,61 +190,73 @@ answer.
 
 ### Connection model
 
-The available connection is `guided-manual`: the human uses their existing
-authenticated wp-admin session while the agent stays outside the browser. The
-human enters the provider key in Quip Bot's write-only field and reports only
-non-secret state such as the chosen provider/model and whether the test passed.
+The default connection is `api`. The bundled helper
+(`helper/quip-setup-helper.mjs`, single-file Node.js >= 22.20, zero
+dependencies) opens WordPress core's Application Password consent screen in
+the system browser; the owner signs in and approves, and the helper stores the
+generated credential directly in the macOS Keychain before printing a redacted
+summary. The connection is temporary by server design: a 30-minute idle
+timeout, a two-hour hard lifetime, and automatic revocation on go-live.
 
-The future direct connection uses WordPress core's Application Password consent
-screen in the system browser. A local helper captures the generated credential
-and stores it directly in macOS Keychain or Windows Credential Manager.
+The agent talks to WordPress only through the helper's closed subcommands —
+paths must stay inside `/setup`, absolute URLs are refused, and the
+provider-key route is unreachable from the generic bridge. The provider key is
+typed by the human on the helper's own terminal prompt with echo off.
 
-The agent never controls the browser, reads the authenticated page, collects the
-normal WordPress password, or receives the generated Application Password.
-
-Because the helper and public API are not included in version 0.2.1, the skill
-records:
+The fallback connection is `guided-manual`, recorded with an explicit reason
+(multisite, a plugin that predates the setup API, an owner who declines the
+helper, or a platform without a supported credential backend — the helper is
+macOS-only in this release; Windows and Linux exit
+`credential-backend-unsupported`). The human uses their existing authenticated
+wp-admin session while the agent stays outside the browser, enters the
+provider key in Quip Bot's write-only field, and reports only non-secret state.
 
 ```yaml
-connection: guided-manual
-automation: blocked-public-helper-and-api
+connection: api | guided-manual
+reason: multisite | plugin-predates-api | owner-declined-helper | credential-backend-unsupported
 ```
 
-It does not fall back to browser automation, SSH, XML-RPC, direct database
+The agent never controls the browser, reads the authenticated page, collects the
+normal WordPress password, or receives the generated Application Password. It
+does not fall back to browser automation, SSH, XML-RPC, direct database
 access, or a credential pasted into chat.
 
 ### Configuration model
 
-The current Quip Bot plugin has internal admin routes, but they are not a stable
-public automation contract. Version 0.2.1 does not call them.
+On the API path, the skill builds one non-secret configuration envelope from
+the approved plan and drives it through the published contract
+(`quipbot/v1/setup`, API version 1.0, verified against Quip Bot 4.8.0):
 
-After the plan is approved, the skill guides the human through **Settings → AI
+1. `POST /setup/validate` — side-effect free; returns the server's
+   configuration fingerprint, warnings, and a summary;
+2. explicit owner approval of exactly that configuration;
+3. `POST /setup/apply` with `approval.confirmed: true`, the server-returned
+   `configuration_sha256`, and an idempotency key — the plugin snapshots the
+   affected options first and visibility never changes;
+4. optional `POST /setup/rollback` restores that snapshot (never a provider
+   secret);
+5. when the plugin advertises the `interview` capability (4.8.0+), the skill
+   fetches the onboarding interview questions, asks the owner in chat, submits
+   the answers, previews the assembled prompt, and folds the preview's
+   envelope into the same validate → approve → apply pipeline.
+
+Unknown fields and unsupported schema versions fail closed: the skill stops
+rather than retrying mutated envelopes. The plugin's internal admin routes are
+still not a public contract, and the setup credential cannot reach them.
+
+On the guided path, the skill directs the human through **Settings → AI
 providers**, **Setup**, **Knowledge base**, **Templates**, and the operational
 Settings sections. The human keeps visibility off until verification passes.
 The Quip Bot 3.11.0 field map requires a separate plan row for every control,
 including current state, source, approval, environment, data classification,
 verification, and rollback.
 
-The required future public API must provide version negotiation, least-privilege
-setup access, status, draft configuration, write-only provider-key status,
-knowledge, consent, handoff, preview, validation, rollback, and separate
-activation/go-live operations.
-
-After that API and the helper ship, a write-capable release must:
-
-1. read current state;
-2. show a redacted field-level diff;
-3. request explicit approval immediately before writing;
-4. write a disabled or draft configuration;
-5. read it back and verify equality;
-6. test behavior;
-7. request separate go-live approval.
-
 ### Provider keys and quip.bot accounts
 
-The human enters the provider key in Quip Bot's write-only WordPress settings.
-Automation may later inspect provider, model, `has_key`, and test status, but
-never the key.
+The human enters the provider key through the helper's `provider` subcommand
+(a terminal prompt with echo off, API path) or in Quip Bot's write-only
+WordPress settings (guided path). Automation may inspect provider, model,
+`has_key`, and test status, but never the key.
 
 The free Quip Bot core does not require a quip.bot account or paid license. A future
 Quip Bot device-authorization flow belongs only to a premium entitlement or managed
@@ -261,10 +281,13 @@ blocking, conditional, and post-launch gates and defines concrete supported,
 unknown, refusal, unrelated-request, consent, disclosure, handoff, fallback,
 and responsive tests.
 
-Runtime verification will become available after the public API/helper ship. It
-must test provider status, knowledge, grounded answers, refusals, consent,
-handoff, offline behavior, mobile/desktop appearance, and a separately approved
-go-live.
+On the API path, `POST /setup/verify` runs the deterministic readiness checks
+(compatibility, provider selection and key, provider test, business knowledge,
+consent, handoff, approved apply, visibility state) and go-live is a separate
+`POST /setup/go-live` that requires every blocking check to pass plus explicit
+approval — and then revokes the setup connection itself. Behavior tests
+(grounded answers, refusals, consent, handoff, offline states, mobile/desktop
+appearance) remain human-observed on both paths.
 
 ### Where things live
 
@@ -275,7 +298,8 @@ go-live.
 - `contracts/installation-and-rollback.md` — official package, version,
   environment, backup, and recovery contract.
 - `contracts/configuration-fields.md` — field-level Quip Bot 3.11.0 map.
-- `contracts/current-api-contract.md` — public API gate.
+- `contracts/current-api-contract.md` — the shipped setup API surface.
+- `helper/quip-setup-helper.mjs` — the local credential helper (macOS Keychain).
 - `templates/` — the setup artifact formats.
 - `qa/verification-checklist.md` — plan and runtime release gate.
 
@@ -292,10 +316,13 @@ go-live.
   `owner-supplied`.
 - **User offers a password or key in chat:** ask them not to send it and use the
   approved human entry surface instead.
-- **Connection helper is missing:** use the guided human-operated path and keep
-  direct automation `blocked-public-helper-and-api`.
-- **Public API version is missing or unknown:** make no WordPress write and
-  record `blocked-stable-contract`.
+- **The credential backend is unsupported (Windows/Linux):** the helper exits
+  `credential-backend-unsupported`; use the guided path with that reason.
+- **The compatibility gate does not pass** (multisite, missing capability,
+  wrong schema version, origin mismatch): make no WordPress write through the
+  API; use the guided path and record the reason.
+- **A 401 appears mid-flow:** the temporary connection expired or was revoked;
+  re-read the public compatibility endpoint and ask the owner to re-authorize.
 - **A production write is ready:** show the redacted diff and obtain explicit
   approval immediately before the change.
 - **A public test fails:** turn visibility off first, confirm the widget is
@@ -303,4 +330,4 @@ go-live.
 
 ---
 
-_Covers SKILL.md v0.2.1 | Last changelog entry: v0.2.1 | Generated: 2026-08-22._
+_Covers SKILL.md v0.3.0 | Last changelog entry: v0.3.0 | Generated: 2026-09-01._

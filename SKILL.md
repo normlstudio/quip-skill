@@ -3,12 +3,13 @@ name: quip-setup
 description: >
   Install or set up Quip Bot on a WordPress site through a safe six-stage
   workflow: preflight, research, owner questions, connect, configure, and
-  verify. Supports the guided WordPress-admin path available today and a future
-  API-driven path. Use when a site owner asks to install, plan, configure,
-  review, or launch Quip Bot without exposing WordPress passwords or AI-provider
-  keys to the agent.
+  verify. Defaults to the shipped Quip Bot setup API with a local credential
+  helper; keeps the guided WordPress-admin path as the documented fallback.
+  Use when a site owner asks to install, plan, configure, review, or launch
+  Quip Bot without exposing WordPress passwords or AI-provider keys to the
+  agent.
 metadata:
-  version: "0.2.1"
+  version: "0.3.0"
   author: "Norml Studio"
 ---
 
@@ -37,22 +38,29 @@ production change explicit and reviewable.
 
 ## Current release state
 
-Version 0.2.1 is a public alpha with a complete guided setup path.
+Version 0.3.0 is a public alpha with two complete setup paths.
 
-- Research, owner questions, configuration planning, human-operated WordPress
-  setup, and manual/public verification are available now.
-- The human performs every wp-admin action. The agent supplies a reviewed plan
-  and never controls, reads, or screenshots the authenticated browser.
-- Direct agent writes remain paused until Quip Bot publishes its stable public
-  setup API and the OS-native credential helper is released.
-- Do not automate against the plugin's current internal `iqb/v1/admin` routes.
+- The **API path is the default**: Quip Bot ships its stable public setup API
+  (`quipbot/v1/setup`, API version 1.0, plugin 4.3.0+), and this skill ships
+  the local credential helper (`helper/quip-setup-helper.mjs`) that holds the
+  temporary WordPress Application Password in the macOS Keychain. The agent
+  composes non-secret JSON envelopes and reads non-secret responses; it never
+  sees a credential.
+- The path is chosen by the public `GET /setup/compatibility` gate, not by a
+  version string: `available: true`, `"1.0"` in `schema_versions`, and the
+  required capability list. See `contracts/current-api-contract.md`.
+- The **guided wp-admin path remains fully supported** as the fallback: for
+  multisite (the API refuses it by design), a plugin that predates the setup
+  API, an owner who declines the helper, or a platform without a supported
+  credential backend (the helper is macOS-only in this release).
+- The plugin's internal `quipbot/v1/admin` routes are still not a public
+  contract; the setup credential cannot reach them, and the skill never calls
+  them.
 - The free Quip Bot core is free forever and requires no quip.bot account or license.
   The site owner connects and pays a supported AI provider directly.
 - Quip Bot Pro and provider inference are separate purchases. Never imply that the
-  $200/year Pro license includes AI usage.
-
-If the user asks for direct automated writes, use the guided path instead and
-state the missing API/helper contract plainly. Never improvise an unsafe path.
+  $200/year Pro license includes AI usage. No Pro-activation or `/license/*`
+  operation exists in the shipped setup API; never present one as available.
 
 ## Inputs
 
@@ -86,6 +94,7 @@ quip-setup/
 ├── research.md
 ├── owner-answers.md
 ├── configuration-plan.md
+├── configuration-envelope.json   # API path only: the non-secret envelope sent to validate/apply
 └── verification.md
 ```
 
@@ -115,6 +124,31 @@ Use quip-setup to set up Quip Bot on https://example.com
 Do not put a WordPress password, provider key, Application Password, or secret
 URL into that command or the conversation.
 
+## The credential helper
+
+The API path runs through `helper/quip-setup-helper.mjs`, shipped inside this
+skill. It is a single-file Node.js (>= 22.20, the same floor as the installer)
+ESM script with zero npm dependencies, and it is the only component that ever
+touches the WordPress Application Password.
+
+```bash
+node helper/quip-setup-helper.mjs connect https://example.com
+node helper/quip-setup-helper.mjs status https://example.com
+node helper/quip-setup-helper.mjs call https://example.com POST /setup/validate --body quip-setup/configuration-envelope.json
+node helper/quip-setup-helper.mjs provider https://example.com openai gpt-5-mini   # human's own terminal; key typed with echo off
+node helper/quip-setup-helper.mjs disconnect https://example.com
+```
+
+- Credentials live in the macOS Keychain (`quip-setup:<origin-slug>`); the
+  non-secret connection record lives at `~/.quip-setup/<origin-slug>.json`.
+- On Windows and Linux the helper exits with
+  `credential-backend-unsupported`; use the guided path there.
+- The generic `call` bridge refuses absolute URLs, any path outside `/setup`,
+  and `PUT /setup/provider` (the provider secret goes only through the
+  `provider` subcommand's own TTY prompt).
+- Exit codes: 0 success (HTTP 2xx), 1 HTTP/contract failure, 2 usage or
+  platform error.
+
 ## Workflow
 
 ### 0. Preflight and installation
@@ -123,9 +157,12 @@ Read `actions/preflight.md` and `contracts/installation-and-rollback.md`.
 
 Before researching or changing WordPress, explicitly confirm management
 authority, canonical origin, artifact folder, target environment, backup state,
-and whether Quip Bot is installed and active. Record the installed version and
-compatibility status. Version 0.2.1 of this guide is verified against Quip Bot
-3.11.0; stop on an older version or an incompatible WordPress/PHP runtime.
+and whether Quip Bot is installed and active. When the site is reachable, the
+public `GET /setup/compatibility` endpoint answers the plugin version,
+availability, and capability questions without asking the human. The guided
+path's screen-by-screen guidance is verified against Quip Bot 3.11.0; the API
+path's contract is verified against Quip Bot 4.8.0 (base API since 4.3.0).
+Stop on an incompatible WordPress/PHP runtime.
 
 If Quip Bot is absent, the human may install it only from a verified official
 distribution. Do not guess a package URL, use an arbitrary mirror, or claim a
@@ -155,45 +192,68 @@ items; do not fill gaps with guesses.
 ### 3. Connect
 
 Read `actions/connect.md`, `contracts/security-model.md`, and
-`contracts/admin-guided-path.md`.
+`contracts/current-api-contract.md`.
 
-Default to `connection: guided-manual`. The human opens Quip Bot in wp-admin and
-performs the approved steps while the agent remains outside the authenticated
-browser. The provider key stays write-only in Quip Bot Settings.
+When the compatibility gate passes and the owner agrees to the helper, connect
+through `node helper/quip-setup-helper.mjs connect <origin>`: the system
+browser opens WordPress core's Application Password consent screen, the owner
+signs in and approves, and the helper stores the credential in the macOS
+Keychain before printing a redacted summary. Record `connection: api` plus the
+advertised connection policy, and warn the owner that the whole run has a
+two-hour hard ceiling and a 30-minute idle timeout.
 
-The future automated connection uses WordPress core's Application Password
-consent screen plus an OS-native helper. Until both the helper and public API
-exist, record `automation: blocked-public-helper-and-api` without blocking the
-guided workflow.
+Otherwise record `connection: guided-manual` with an explicit `reason`
+(`multisite`, `plugin-predates-api`, `owner-declined-helper`, or
+`credential-backend-unsupported`) and follow
+`contracts/admin-guided-path.md`. The provider key stays write-only in either
+path.
 
 ### 4. Configure
 
 Read `actions/configure.md`, `contracts/current-api-contract.md`,
-`contracts/admin-guided-path.md`, `contracts/configuration-fields.md`, and
+`contracts/configuration-fields.md`, `contracts/admin-guided-path.md`, and
 `templates/configuration-plan.md`.
 
 Map the approved research and owner answers to Quip Bot settings, knowledge,
-consent, handoff, provider choice, appearance, and launch gates. Provider keys
-remain write-only in WordPress admin and are entered by the human.
+consent, handoff, provider choice, appearance, and launch gates, then show the
+reviewed plan and ask for explicit approval.
 
-Show the reviewed plan and ask for explicit approval. In guided mode, direct the
-human through the exact Quip Bot screens and ask them to confirm only non-secret
-status. Never ask them to paste a provider key or authenticated screenshot.
+On the API path: build the configuration envelope from the approved plan,
+`call POST /setup/validate`, show the returned summary and warnings, and only
+after the owner's explicit approval `call POST /setup/apply` with
+`approval.confirmed: true` and `approval.artifact_sha256` equal to the
+`configuration_sha256` the validate response returned. When the `interview`
+capability is advertised, run the interview stage first: GET the questions,
+ask the owner in chat, PUT the answers, GET the preview, and fold the
+preview's envelope into the configuration envelope. Apply never changes
+visibility.
 
-A later skill version may write directly only through the published Quip Bot setup
-API, after showing the exact proposed changes and receiving explicit approval.
+The provider key is entered by the human — through the helper's `provider`
+subcommand in their own terminal (API path) or in Quip Bot's write-only
+settings field (guided path). Never through chat.
+
+On the guided path, direct the human through the exact Quip Bot screens and ask
+them to confirm only non-secret status. Never ask them to paste a provider key
+or authenticated screenshot.
 
 ### 5. Verify
 
 Read `actions/verify.md` and `qa/verification-checklist.md`.
 
-Verify the plan and the human-confirmed guided setup now. Cover provider test
-status without the key, knowledge, consent, test-chat behavior, escalation,
-privacy, and the preview widget. Keep the bot off until the user explicitly
-approves go-live. Treat every checklist row marked `blocking` as a release gate.
-If a post-launch check fails, first turn visibility off, then use the recorded
-rollback path. Direct automated verification remains blocked until the public
-API/helper ship.
+On the API path, `call POST /setup/verify` drives the automated checklist
+rows; behavior tests still run through the human-observed preview. Go-live is
+`call POST /setup/go-live` only after every blocking checklist row passes AND
+the owner's explicit, separately recorded approval. A successful go-live
+revokes the setup connection (`connection_revoked`), so no disconnect step
+follows it.
+
+On the guided path, verify the human-confirmed setup as before. Cover provider
+test status without the key, knowledge, consent, test-chat behavior,
+escalation, privacy, and the preview widget. Keep the bot off until the user
+explicitly approves go-live. Treat every checklist row marked `blocking` as a
+release gate. If a post-launch check fails, first turn visibility off, then use
+the recorded rollback path (API path: `POST /setup/rollback` restores the
+apply snapshot; it never restores a provider secret).
 
 Write the result to `quip-setup/verification.md` with `pass`, `fail`, `blocked`,
 or `not-applicable` for every check.
@@ -206,11 +266,18 @@ or `not-applicable` for every check.
 - Open a system browser only for human login and consent; never automate it.
 - In guided mode, the human uses the existing authenticated wp-admin session and
   enters provider secrets directly into Quip Bot's write-only field.
-- In automated mode, store secrets only through the released OS-native helper.
+- In API mode, the released helper is the only component that touches the
+  Application Password (macOS Keychain) and the provider key (TTY prompt with
+  echo off). The agent composes non-secret envelopes and reads non-secret
+  responses only.
 - Use WordPress capabilities and the published Quip Bot setup API; never SSH or SQL.
 - Treat provider keys as write-only. Automation may inspect `has_key`, provider,
   model, and test status only.
 - Require explicit approval immediately before any production write or go-live.
+- Fail closed: stop on `quipbot_setup_unknown_field` or
+  `quipbot_setup_unsupported_schema` rather than retrying mutated envelopes;
+  treat a mid-flow 401 as an expired connection, re-read the public
+  compatibility endpoint, and ask the owner to re-authorize.
 - Abort on an unexpected hostname, redirect, TLS error, capability failure, or
   API-version mismatch.
 - Never install a plugin package from an unverified mirror, attachment, or URL
@@ -223,6 +290,8 @@ or `not-applicable` for every check.
 - A cited public-site research artifact.
 - An owner-answer record that separates decisions from assumptions.
 - A field-by-field configuration plan with source and approval state.
+- On the API path, a non-secret configuration envelope with the server-issued
+  fingerprint, apply ID, rollback ID, and idempotency key recorded.
 - A verification report that exposes every blocker.
 - An installation, environment, backup, and rollback preflight record.
 - No credentials and no hidden production side effects.
@@ -230,9 +299,11 @@ or `not-applicable` for every check.
 ## Related material
 
 - `contracts/security-model.md` — credential and consent boundaries.
-- `contracts/admin-guided-path.md` — current human-operated wp-admin sequence.
+- `contracts/current-api-contract.md` — the shipped setup API surface.
+- `contracts/admin-guided-path.md` — the fallback human-operated wp-admin sequence.
 - `contracts/installation-and-rollback.md` — cold-start, compatibility, backup,
   and recovery gates.
-- `contracts/configuration-fields.md` — field-level map for Quip Bot 3.11.0.
-- `contracts/current-api-contract.md` — what is stable, internal, or blocked.
+- `contracts/configuration-fields.md` — field-level map (guided labels 3.11.0;
+  envelope mapping 4.8.0).
+- `helper/quip-setup-helper.mjs` — the local credential helper.
 - `qa/verification-checklist.md` — release gate for a configured installation.

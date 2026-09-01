@@ -33,4 +33,5 @@ widget appearance. Do not infer them from plugin defaults.
 - Quote consequential wording exactly when the owner provides it.
 - Mark every unanswered decision `unresolved`.
 - Never infer a legal, privacy, retention, or commercial decision.
-- Never request the provider key; the human enters it in WordPress admin.
+- Never request the provider key; the human enters it through the helper's
+  `provider` subcommand (API path) or in WordPress admin (guided path).

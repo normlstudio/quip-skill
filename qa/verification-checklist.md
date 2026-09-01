@@ -16,6 +16,37 @@ Run the pre-launch gate in two phases: all readiness-blocking rows except L04,
 then request approval and pass L04. Visibility may be enabled only after both
 phases pass.
 
+## API-path evidence map
+
+On the API path (`connection: api`), `POST /setup/verify` supplies the
+automated evidence; the guided-path evidence column in the tables below stays
+authoritative for human-observed rows. After a successful go-live the
+connection is revoked (`connection_revoked`), so post-launch rows use public
+anonymous observation, never another API call.
+
+| ID | How the API path satisfies it |
+|---|---|
+| A01 | Unchanged — human confirmation |
+| A02 | Helper `connect` gate: compatibility `site_url` equals the supplied origin |
+| A03 | Compatibility payload (`available`, `plugin_version`, capabilities) + verify check `compatibility` |
+| A04 | Unchanged — human confirmation; also record the apply's `rollback_id` |
+| A05 | Verify check `visibility` reports `blocked` (off) during setup |
+| A06 | Guided runs only — the API-path counterpart is A07 |
+| A07 | Credential stored by the helper in the macOS Keychain; transcript carries only redacted helper output; capability gate recorded at connect |
+| D01 | Verify check `provider_selected` + `GET /setup/status` provider/model versus the approved plan |
+| D02 | Verify check `provider_test` passing (written by `POST /setup/provider/test`); the key is never returned |
+| D03 | Unchanged — plan artifact review |
+| D04 | Secret-pattern scan of artifacts plus helper output (redacted by construction) |
+| D05 | Validate `summary` + `GET /setup/status` compared to the field-level plan rows |
+| D06 | Unchanged — human-confirmed when enabled |
+| B01–B08 | Not covered by the API — human-observed preview, exactly as on the guided path |
+| L01 | Unchanged — report/digest observation |
+| L02 | Unchanged — human observation of the preview |
+| L03 | Verify check `visibility` stayed `blocked` until go-live; apply never changes visibility |
+| L04 | Explicit approval recorded first, then the `POST /setup/go-live` body carries `approval.confirmed: true` + `apply_id` + `configuration_sha256`; verify check `approved_apply` passing |
+| L05 | Unchanged — one anonymous public session |
+| L06 | Visibility off first (human), then `POST /setup/rollback` restores the apply snapshot (never a provider secret) |
+
 ## Authority, installation, and connection
 
 | ID | Gate | Check | Required evidence |
@@ -26,7 +57,7 @@ phases pass.
 | A04 | blocking | Backup/reset and rollback paths confirmed | Human confirmation + operator/timestamp |
 | A05 | blocking | Public visibility is off during setup | Human confirmation or anonymous observation |
 | A06 | blocking | Guided wp-admin remained human-operated; no authenticated screenshot or secret shared | Artifact/transcript review |
-| A07 | conditional | Automated credential stayed outside transcript; least capability and public API version supported | Only after automation exists |
+| A07 | conditional | Automated credential stayed outside transcript; least capability and public API version supported | Helper connect summary + compatibility gate record (blocking on the API path) |
 
 ## Provider and data
 

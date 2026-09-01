@@ -19,22 +19,35 @@ project directory is clearly the requested workspace; state the chosen path.
 
 ## Installation inventory
 
-Ask the human to open **WordPress → Plugins → Installed Plugins** and report
-only:
+When the plugin is installed and the site is reachable, the public
+compatibility endpoint answers the version and availability questions without
+asking the human. Fetch (no authentication):
 
-- whether **Quip Bot** is installed;
-- whether it is active;
-- its displayed version;
-- the WordPress and PHP versions from **Tools → Site Health → Info**.
+```text
+GET <origin>/wp-json/quipbot/v1/setup/compatibility
+GET <origin>/?rest_route=/quipbot/v1/setup/compatibility   # pretty-permalink fallback
+```
 
-Version 0.2.1 of this skill is verified against Quip Bot 3.11.0. The documented
-runtime floor is WordPress 6.2 and PHP 7.4.
+It reports `plugin_version`, `available`/`unavailable_reason`,
+`schema_versions`, `capabilities`, `site_url`, and the connection policy —
+record them and decide the path per `actions/connect.md`. Ask the human only
+for what the payload cannot answer: whether **Quip Bot** appears under
+**Plugins → Installed Plugins** when the endpoint is unreachable (absent,
+inactive, or a pre-API version answer 404), and the WordPress and PHP versions
+from **Tools → Site Health → Info**.
+
+Version 0.3.0 of this skill verifies the guided screen guidance against
+Quip Bot 3.11.0 and the API contract against 4.8.0 (base setup API since
+4.3.0). The documented runtime floor is WordPress 6.2 and PHP 7.4.
 
 - Quip Bot older than 3.11.0: `compatibility: blocked-plugin-upgrade`.
+- Quip Bot 3.11.0 or newer without a passing compatibility gate: guided path
+  (`connection: guided-manual` with its `reason`), not a blocker.
 - WordPress older than 6.2 or PHP older than 7.4:
   `compatibility: blocked-runtime`.
-- A newer Quip Bot whose labels materially differ from the field map: stop the
-  affected section and record `compatibility: blocked-guide-drift`.
+- On the guided path, a Quip Bot whose labels materially differ from the field
+  map: stop the affected section and record
+  `compatibility: blocked-guide-drift`.
 
 Never request an authenticated screenshot.
 
@@ -71,7 +84,8 @@ artifact_folder: /absolute/non-secret/path/quip-setup
 environment: staging | production | unresolved
 canonical_origin: https://example.com
 installation: active | inactive | absent | blocked-official-package | unresolved
-plugin_version: 3.11.0 | unknown
+plugin_version: 4.8.0 | unknown
+connection: api | guided-manual | unresolved
 wordpress_version: value | unknown
 php_version: value | unknown
 compatibility: passed | unresolved | blocked-plugin-upgrade | blocked-runtime | blocked-guide-drift

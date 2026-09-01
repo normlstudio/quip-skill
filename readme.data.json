@@ -1,6 +1,6 @@
 {
   "skill": "quip-setup",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "repo": "quip-skill",
   "audience": "WordPress site owners and developers",
   "actsOn": "Quip Bot setup",
@@ -27,11 +27,11 @@
     },
     {
       "t": "Connect",
-      "d": "Keep WordPress credentials outside the transcript."
+      "d": "Temporary credential via the bundled helper; secrets stay out of the transcript."
     },
     {
       "t": "Configure",
-      "d": "Guide the human through the approved wp-admin plan."
+      "d": "Validate, approve, and apply one non-secret envelope through the setup API."
     },
     {
       "t": "Verify",
@@ -50,10 +50,10 @@
   "installNote": "Requires Node.js 22.20 or newer.",
   "callout": {
     "label": "Public alpha",
-    "text": "Human-guided WordPress setup and verification work now. **Direct agent writes remain blocked** until the stable public API and OS-native helper ship."
+    "text": "Version 0.3.0 ships both paths. **The API path is the default** — Quip Bot's stable setup API plus the bundled macOS credential helper — and the human-guided wp-admin path remains the fallback for multisite, older plugins, or unsupported credential backends."
   },
   "capabilities": {
-    "label": "What works in 0.2.1",
+    "label": "What works in 0.3.0",
     "items": [
       {
         "name": "Cold-start preflight",
@@ -80,28 +80,34 @@
         "desc": "Maps every proposed field to a source and verification method."
       },
       {
+        "name": "API-driven setup",
+        "tag": "ready",
+        "ok": true,
+        "desc": "Validate, approve, apply, verify, rollback, and go-live through the shipped setup API, with credentials held by the local helper in the macOS Keychain."
+      },
+      {
         "name": "Guided WordPress setup",
         "tag": "ready",
         "ok": true,
-        "desc": "Walks the human through Quip Bot admin without observing the authenticated browser."
+        "desc": "Fallback path: walks the human through Quip Bot admin without observing the authenticated browser."
       },
       {
-        "name": "Direct agent writes",
+        "name": "Windows/Linux credential backend",
         "tag": "blocked",
         "ok": false,
-        "desc": "Waits for the stable public setup API and credential helper."
+        "desc": "The helper is macOS-only in this release; other platforms route to the guided path."
       }
     ]
   },
   "limits": {
     "label": "Safety boundaries",
     "items": [
-      "No WordPress passwords, Application Passwords, provider keys, or tokens in chat.",
-      "No browser automation, SSH, XML-RPC, direct database writes, or internal admin routes.",
-      "No arbitrary plugin package, no production change without backup, and no go-live without explicit approval."
+      "No WordPress passwords, Application Passwords, provider keys, or tokens in chat — the helper holds the temporary credential in the macOS Keychain.",
+      "No browser automation, SSH, XML-RPC, direct database writes, or internal admin routes; API calls stay inside quipbot/v1/setup.",
+      "No arbitrary plugin package, no production change without backup and explicit approval, and go-live is a separate approval that revokes the connection."
     ]
   },
-  "covers": "0.2.1",
-  "generated": "2026-08-22",
+  "covers": "0.3.0",
+  "generated": "2026-09-01",
   "hasHumanMd": true
 }

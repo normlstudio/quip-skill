@@ -1,8 +1,12 @@
 # Guided Quip Bot admin path
 
-Use this path while the public setup API and credential helper are unavailable.
-The human remains in control of the authenticated WordPress browser. The agent
-prepares the plan, explains each step, and records non-secret confirmations.
+This is the **fallback path**. The default is the API path through the shipped
+setup API and credential helper (`actions/connect.md`); use this guided
+sequence when the compatibility gate does not pass or the owner declines the
+helper — multisite, a plugin that predates the setup API, or a platform
+without a supported credential backend. The human remains in control of the
+authenticated WordPress browser. The agent prepares the plan, explains each
+step, and records non-secret confirmations.
 
 ## Before entering wp-admin
 
@@ -90,7 +94,7 @@ Record these in `configuration-plan.md`:
 
 ```yaml
 connection: guided-manual
-automation: blocked-public-helper-and-api
+reason: multisite | plugin-predates-api | owner-declined-helper | credential-backend-unsupported
 provider_test: pending | passed | failed
 configuration: planned | human-applied | verified
 go_live: off | approved | live

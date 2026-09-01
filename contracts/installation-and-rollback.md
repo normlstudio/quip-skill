@@ -1,6 +1,8 @@
 # Installation, environment, and rollback
 
-This is the cold-start safety contract for the human-guided release.
+This is the cold-start safety contract. Installation and activation are
+human-operated on both paths; the API path adds an automated rollback for
+applied configuration (see "Automated rollback" below).
 
 ## Verified distribution only
 
@@ -36,9 +38,11 @@ to improvise.
 5. Human reports the installed version and whether **Quip Bot → Setup** opens.
 6. Human confirms public visibility is off.
 
-The v0.2.1 guide is verified against Quip Bot 3.11.0, WordPress 6.2+, and PHP
-7.4+. Treat these as compatibility floors, not a claim that every unrelated
-plugin/theme combination is compatible.
+The guided screen-by-screen guidance is verified against Quip Bot 3.11.0; the
+API path's contract is verified against Quip Bot 4.8.0 (base setup API since
+4.3.0). WordPress 6.2+ and PHP 7.4+ are the runtime floors. Treat these as
+compatibility floors, not a claim that every unrelated plugin/theme
+combination is compatible.
 
 If Quip Bot is already installed but inactive, begin at activation step 4 after
 confirming that the installed copy came from the owner's trusted installation.
@@ -59,6 +63,29 @@ version, visibility, active provider/model, whether a key exists, enabled site
 language, and which configuration areas are already populated. Do not ask for
 raw keys, conversation data, or authenticated screenshots.
 
+## Automated rollback (API path)
+
+When the last configuration write was `POST /setup/apply`, the matching
+automated rollback is:
+
+```bash
+node helper/quip-setup-helper.mjs call https://example.com POST /setup/rollback --body rollback.json
+```
+
+with `rollback.json` containing `{"rollback_id": "<the id the apply response
+returned>"}`. It restores exactly the Quip Bot options the apply snapshotted
+and consumes the snapshot on success; `quipbot_setup_no_snapshot` means there
+is nothing left to restore.
+
+**The provider secret is never restored by rollback.** The snapshot never
+contains it in the first place — rollback restores the provider *selection*
+(provider and model) only, and after a rollback that changed the selection the
+provider test must be re-run. Rollback also never restores WordPress users,
+plugins, posts, arbitrary options, or external provider state.
+
+Visibility first, always: if the widget is public, turn it off before rolling
+back — rollback does not change visibility.
+
 ## Rollback and immediate disable
 
 Use this order after any failed public behavior, privacy concern, or unexpected
@@ -67,8 +94,9 @@ output:
 1. Human turns **Settings → Visibility → Make the bot live for visitors** off
    and saves.
 2. Confirm the widget is absent for an anonymous visitor.
-3. Restore the recorded pre-change non-secret values or restore the confirmed
-   backup/reset checkpoint.
+3. Restore the recorded pre-change non-secret values — on the API path via
+   `POST /setup/rollback` (above), on the guided path by hand — or restore the
+   confirmed backup/reset checkpoint.
 4. If Quip Bot admin cannot be used, the human deactivates Quip Bot from Installed
    Plugins, then confirms the widget is absent.
 5. Record the failed check and rollback evidence. Do not retry go-live without
