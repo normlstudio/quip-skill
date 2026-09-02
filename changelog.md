@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.1 — 2026-09-02
+
+- Retired `quip-setup` after the public product became MoonPress Chat.
+- Replaced the default-branch skill entry point and README with a compatibility-safe
+  redirect to `normlstudio/moonpresschat-skill` and `moonpresschat-setup` v0.4.0.
+- Preserved existing `quip-setup/` artifacts, repository history, releases, and the
+  plugin's internal `quipbot` API namespace instead of attempting an unsafe migration.
+
 ## 0.3.0 — 2026-09-01
 
 - Made the shipped Quip Bot setup API (`quipbot/v1/setup`, API version 1.0)
